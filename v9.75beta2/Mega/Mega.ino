@@ -141,26 +141,26 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 #if defined(ROBOT_MOWER)
   //Mower Pin Setup for the wheel Motor Bridge Controller
   //Motor A
-  #define ENAPin 7                // EN Pins need a digital pin with PWM
-  #define IN1Pin 6                // IN Pins dont need digital PWM
-  #define IN2Pin 5
+  #define ENAPin 7              	// EN Pins need a digital pin with PWM
+  #define IN1Pin 22             	// JDP IN Pins dont need digital PWM
+  #define IN2Pin 23					//JDP
   //Motor B
   #if defined(STOP_BTN)
   #define ENBPin 13                // EN Pins need a digital pin with PWM
   #define IN3Pin 12                // IN Pins dont need digital PWM
   #define IN4Pin 11
   bool Stop_Button_Activated = false;  // true when STOP_BTN activated
+  #define StopBtn 2              // Emergency stop button - immediate stop using interrupt
   #else
-  #define ENBPin 2                // EN Pins need a digital pin with PWM
-  #define IN3Pin 4                // IN Pins dont need digital PWM
-  #define IN4Pin 3
+  #define ENBPin 6                	// JDP EN Pins need a digital pin with PWM
+  #define IN3Pin 24                	// JDP IN Pins dont need digital PWM
+  #define IN4Pin 25					//JDP
   #endif
   //Motor Blades
   #define RPWM 8
-  #define L_EN 9
-  #define R_EN 10
-  #define Relay_Blades_Brake_Resistor 25 // 1 = brake active
-  #define StopBtn 2              // Emergency stop button - immediate stop using interrupt
+  #define L_EN 27					//JDP
+  #define R_EN 28					//JDP
+  #define Relay_Blades_Brake_Resistor 3 //JDP 1 = brake active
 
   #define PIXHAWK_LH_PWM 11    // MEGA D11
   #define PIXHAWK_RH_PWM 12    // MEGA D12
@@ -208,7 +208,7 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 
 //Relay Switch
-#define Relay_Motors 24         // be careful that you really use PIN24.  The order is sometimes labelled
+#define Relay_Motors 26         //JDP be careful that you really use PIN24.  The order is sometimes labelled
                                 // so it looks like 24 is actually 22.
 
 //Compass Level
@@ -617,12 +617,12 @@ uint8_t Base_Mode = 1;
 
 ****************************************************************************************************/
 
-  char Version[16] = "V9.74";
+  char Version[16] = "V9.75JDP";
 
   bool PCB                        = 0;                          // USE Printed Circuit Board Relay
 
-  bool Cutting_Blades_Activate    = 0;     // EEPROM            // Activates the cutting blades and disc in the code
-  bool WIFI_Enabled               = 1;     // EEPROM            // Activates the WIFI Fucntions
+  bool Cutting_Blades_Activate    = 1;     //JDP EEPROM            // Activates the cutting blades and disc in the code
+  bool WIFI_Enabled               = 0;     //JDP EEPROM            // Activates the WIFI Fucntions
   bool Perimeter_Wire_Enabled     = 1;     // EEPROM            // Activates use of the perimeter boundary wire
   
   // GPS Settings
@@ -682,30 +682,30 @@ uint8_t Base_Mode = 1;
   int  Tip_Over_Sensor_Enabled        = 0;      //EEPROM       // Turns mower off if turned over
 
   //Rain sensor 
-  bool Rain_Sensor_Installed          = 1;  //EEPROM            // 1  = Rain sensor installed    0 = no sensor installed.
+  bool Rain_Sensor_Installed          = 0;  //JDP EEPROM            // 1  = Rain sensor installed    0 = no sensor installed.
   int  Rain_Total_Hits_Go_Home        = 10; //EEPROM            // This sensor only makes sense in combination with a mower docking station
                                                                 // as the mower is sent there to get out of the rain.
   //Battery Settings
-  float Battery_Max               = 12.6;                       // Max battery volts in Volts. 3S = 12.6V
-  float Battery_Min               = 11.4;   //EEPROM            // Lower Limit of battery charge before re-charge required.
+  float Battery_Max               = 29.4;                       //JDP Max battery volts in Volts. 3S = 12.6V
+  float Battery_Min               = 21.0;   //JDP EEPROM            // Lower Limit of battery charge before re-charge required.
   byte  Low_Battery_Detected      = 0;                          // Always set to 0
   byte  Low_Battery_Instances_Chg = 14;     //EEPROM            // Instances of low battery detected before a re-charge is called..
-  float Amps_Charging_Setting     = 0.5;                        // Set value at which charge is detected in Amps (normally between 0.5 and 0.8)  0.5 = my 330/LAM   0.8 = my LM
+  float Amps_Charging_Setting     = 11.5;                        //JDP Set value at which charge is detected in Amps (normally between 0.5 and 0.8)  0.5 = my 330/LAM   0.8 = my LM
   int   Volts_R2_Value            = 7500;                       // Set R2 vaklue in mower settings (usually between 6000 and 7500)  7100 = my 330   7500 = my LM   7000 = my LAM
 
   //Sonar Modules
-  bool Sonar_1_Activate           = 1;      //EEPROM            // Activate (1) Deactivate (0) Sonar 1
-  bool Sonar_2_Activate           = 1;      //EEPROM            // Activate (1) Deactivate (0) Sonar 2
-  bool Sonar_3_Activate           = 1;      //EEPROM            // Activate (1) Deactivate (0) Sonar 3
+  bool Sonar_1_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 1
+  bool Sonar_2_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 2
+  bool Sonar_3_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 3
   int  Max_Sonar_Hit              = 8;      //EEPROM            // Maximum number of Sonar hits before object is discovered
   long maxdistancesonar           = 30;     //EEPROM            // distance in cm from the mower that the sonar will activate at.
   int Sonar_Max_Error_Shutdown    = 5;
 
   // Bumper Module
-  bool Bumper_Activate_Frnt       = 1;      //EEPROM            // Activates the bumper bar on the front facia - defualt is off.  Enable in the LCD settings menu.
+  bool Bumper_Activate_Frnt       = 0;      //EEPROM            //JDP Activates the bumper bar on the front facia - defualt is off.  Enable in the LCD settings menu.
 
   //Wheel Motors Setup
-  bool Ramp_Motor_ON             = 1;
+  bool Ramp_Motor_ON             = 0;		//JDP
   
   int Max_Cycles_Straight        = 1250;    //EEPROM            // Number of loops the Sketch will run before the mower just turns around anyway. Adjust according to your garden length
   int PWM_MaxSpeed_LH            = 255;     //EEPROM            // Straight line speed LH Wheel (Looking from back of mower)  Will be overidden if saved in EEPROM
@@ -721,7 +721,7 @@ uint8_t Base_Mode = 1;
   int Mower_Turn_Delay_Max       = 2500;    //EEPROM            // A random turn time between these numbers is selected by the software
   int Mower_Reverse_Delay        = 1800;    //EEPORM            // Time the mower reverses before making a turn.
 
-  bool Wheel_Amp_Sensor_ON       = 1;                           // Measures the amps in the wheel motor to detect blocked wheels.
+  bool Wheel_Amp_Sensor_ON       = 0;                           // Measures the amps in the wheel motor to detect blocked wheels.
   float Max_Wheel_Amps           = 3.5;                         // Maximum amperage allowed in the wheels before a blockage is called.
   int  Wheel_Blocked_Count_Max   = 3;                           // Number of times the wheels blocked are sensed before a reverse action takes place.
 
