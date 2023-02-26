@@ -15,14 +15,14 @@
   }
 
   /* Prints Values to the Serial Monitor of mag, smag and signal quality.  */
-  Serial.print(F("Inside (1) or Outside (0):  "));
-  Serial.print((perimeter.isInside(0)));
-  Serial.print(F("     MAG: "));
-  Serial.print((int)perimeter.getMagnitude(0));
-  Serial.print(F("    smag: "));
-  Serial.print((int)perimeter.getSmoothMagnitude(0));
-  Serial.print(F("     qaulity: "));
-  Serial.println((perimeter.getFilterQuality(0)));
+  message_out.print(F("Inside (1) or Outside (0):  "));
+  message_out.print((perimeter.isInside(0)));
+  message_out.print(F("     MAG: "));
+  message_out.print((int)perimeter.getMagnitude(0));
+  message_out.print(F("    smag: "));
+  message_out.print((int)perimeter.getSmoothMagnitude(0));
+  message_out.print(F("     qaulity: "));
+  message_out.println((perimeter.getFilterQuality(0)));
 
 
   #if defined(LCD_KEYPAD)
@@ -43,7 +43,7 @@
 void Test_Relay() {
   
   Turn_Off_Relay();
-  Serial.println("Relay OFF");
+  message_out.println("Relay OFF");
   
   #if defined(LCD_KEYPAD)
   lcd.print("Relay OFF");
@@ -51,7 +51,7 @@ void Test_Relay() {
   #endif
   
   Turn_On_Relay();
-  Serial.println("Relay ON");
+  message_out.println("Relay ON");
   delay(2000);
   
   #if defined(LCD_KEYPAD)
@@ -61,7 +61,7 @@ void Test_Relay() {
   #endif
   
   Turn_Off_Relay();
-  Serial.println("Relay OFF");
+  message_out.println("Relay OFF");
   
   #if defined(LCD_KEYPAD)
   lcd.print("Relay OFF");
@@ -71,7 +71,7 @@ void Test_Relay() {
 
 
 void Test_Wheel_Amps () {
-    Serial.println("Test Wheel Amps");
+    message_out.println("Test Wheel Amps");
     Turn_On_Relay();
     delay(300);
     SetPins_ToGoForwards();
@@ -81,7 +81,7 @@ void Test_Wheel_Amps () {
         Calculate_Wheel_Amps();
         Test_Check_Wheel_Amps();             
         Send_Wheel_Amp_Data();
-        Serial.println(F(""));
+        message_out.println(F(""));
         }
     Motor_Action_Stop_Motors();
     Turn_Off_Relay();
@@ -90,7 +90,7 @@ void Test_Wheel_Amps () {
 
 void Test_Wheel_Motors() {
   I = 1;
-  Serial.println(F("Wheel Test Started"));
+  message_out.println(F("Wheel Test Started"));
   Turn_On_Relay();
   delay(200);
   if (I == 1) {
@@ -150,7 +150,7 @@ void Test_Wheel_Motors() {
   #endif
   
   delay(500);
-  Serial.println(F(""));
+  message_out.println(F(""));
   SetPins_ToGoBackwards();   
   Motor_Action_Go_Full_Speed();
   delay(2000);
@@ -212,7 +212,7 @@ void Test_Wheel_Motors() {
   lcd.print(PWM_Right);
   #endif
   
-  Serial.println(F(""));
+  message_out.println(F(""));
   SetPins_ToGoForwards();
   Motor_Action_Dynamic_PWM_Steering();
   delay(2000);
@@ -330,7 +330,7 @@ void Test_Wheel_Motors() {
   Turn_Off_Relay();
   delay(200);
 
-  Serial.println(F("Wheel Test Complete"));
+  message_out.println(F("Wheel Test Complete"));
 }     
 
 
@@ -356,7 +356,7 @@ void Test_Mower_Blade_Motor() {
   delay(500);
   #endif
   
-  Serial.println("Blades ON");
+  message_out.println("Blades ON");
   delay(2000);
   
   #if defined(LCD_KEYPAD)
@@ -373,7 +373,7 @@ void Test_Mower_Blade_Motor() {
 
   // Stop the blade motor spinning for 2 seconds
 
-  Serial.println("Blades OFF");
+  message_out.println("Blades OFF");
 
   #if defined(LCD_KEYPAD)
   lcd.clear();
@@ -449,19 +449,19 @@ int PingSonarY(int trigPinY, int echoPinY, int distanceY, long durationY, int so
     distance is then set to 999cm so the missed ping is not seen as an object detected.*/
   if (distanceY == 0) {
     distanceY = 999;
-    Serial.print(F("SONAR "));
-    Serial.print(sonarY);
-    Serial.print(": ");
-    Serial.println(F("NO PING ERROR REMOVED"));
+    message_out.print(F("SONAR "));
+    message_out.print(sonarY);
+    message_out.print(": ");
+    message_out.println(F("NO PING ERROR REMOVED"));
   }
 
   /*Prints the Sonar letter and distance measured on the serial Monitor*/
-  Serial.print(F("SONAR "));
-  Serial.print(sonarY);
-  Serial.print(": ");
-  Serial.print(distanceY);
-  Serial.println(F(" cm"));
-  //Serial.println(maxdistancesonar);
+  message_out.print(F("SONAR "));
+  message_out.print(sonarY);
+  message_out.print(": ");
+  message_out.print(distanceY);
+  message_out.println(F(" cm"));
+  //message_out.println(maxdistancesonar);
 
   /*If sonar distance is less than maximum distance then an object is registered to avoid*/
   if (distanceY <= maxdistancesonar ) {

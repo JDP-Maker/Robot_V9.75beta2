@@ -8,24 +8,24 @@ void Set_Mode_PIXHAWK() {
 
 void Check_PIXHAWK() {
 
-  if (PIXHAWK_Armed == 1) Serial.print(F("PIXHAWK | - ARMED - "));
-  if (PIXHAWK_Armed == 0) Serial.print(F("PIXHAWK | Dis-Armed "));
+  if (PIXHAWK_Armed == 1) message_out.print(F("PIXHAWK | - ARMED - "));
+  if (PIXHAWK_Armed == 0) message_out.print(F("PIXHAWK | Dis-Armed "));
 
 // PIXHAWK Flight Control Modes
 // 0 = Manual, 1 = Acro, 3 = Steering, 4 = Hold, 5 = Loiter, 6 = Follow, 7 = Simple, 10 =  Auto
 // 11 = RTL, 12 = Smart_RTL, 15 = Guided
 
-  if (Custom_Mode == 0) Serial.print(F(" | Manual | "));
-  if (Custom_Mode == 1) Serial.print(F(" | Acro | "));
-  if (Custom_Mode == 3) Serial.print(F(" | Steering | "));
-  if (Custom_Mode == 4) Serial.print(F(" | Hold | "));
-  if (Custom_Mode == 5) Serial.print(F(" | Loiter | "));
-  if (Custom_Mode == 6) Serial.print(F(" | Follow | "));
-  if (Custom_Mode == 7) Serial.print(F(" | Simple | "));
-  if (Custom_Mode == 10) Serial.print(F(" | Auto | "));
-  if (Custom_Mode == 11) Serial.print(F(" | RTL | "));
-  if (Custom_Mode == 12) Serial.print(F(" | Smart_RTL |"));
-  if (Custom_Mode == 15) Serial.print(F(" | Guided |"));
+  if (Custom_Mode == 0) message_out.print(F(" | Manual | "));
+  if (Custom_Mode == 1) message_out.print(F(" | Acro | "));
+  if (Custom_Mode == 3) message_out.print(F(" | Steering | "));
+  if (Custom_Mode == 4) message_out.print(F(" | Hold | "));
+  if (Custom_Mode == 5) message_out.print(F(" | Loiter | "));
+  if (Custom_Mode == 6) message_out.print(F(" | Follow | "));
+  if (Custom_Mode == 7) message_out.print(F(" | Simple | "));
+  if (Custom_Mode == 10) message_out.print(F(" | Auto | "));
+  if (Custom_Mode == 11) message_out.print(F(" | RTL | "));
+  if (Custom_Mode == 12) message_out.print(F(" | Smart_RTL |"));
+  if (Custom_Mode == 15) message_out.print(F(" | Guided |"));
         
   // MAVLink
   /* The default UART header for your MCU */ 
@@ -57,7 +57,7 @@ void Check_PIXHAWK() {
     if(num_hbs_pasados>=num_hbs) {
     
     // Request streams from Pixhawk
-    Serial.println("Streams requested!");
+    message_out.println("Streams requested!");
     Mav_Request_Data();
     num_hbs_pasados=0;
     }
@@ -71,7 +71,7 @@ void Check_PIXHAWK() {
 
 
 void Mav_Request_Data()  {
-//Serial.println("COM_Request");
+//message_out.println("COM_Request");
 
     
   mavlink_message_t msg;
@@ -154,13 +154,13 @@ void Mav_Request_Data()  {
 
 void comm_receive() {
 
-  //Serial.println("COM_Receive");
+  //message_out.println("COM_Receive");
 
   mavlink_message_t msg;
   mavlink_status_t status;
  
   // Echo for manual debugging
-  // Serial.println("---Start---");
+  // message_out.println("---Start---");
 
 
   while(Pixhawk_Serial.available()>0) {
@@ -190,15 +190,15 @@ void comm_receive() {
   
             float Battery_Volts = sys_status.voltage_battery;
                     
-            Serial.print("Volts: ");
-            Serial.print(Battery_Volts / 1000 );
-            Serial.print(" Amps: ");
-            Serial.print(sys_status.current_battery);
-            //Serial.print(" Sensors: ");
-            //Serial.print(sys_status.onboard_control_sensors_health);
-            //Serial.print("], [Comms loss (%): ");
-            //Serial.print(sys_status.drop_rate_comm);
-            //Serial.print("] ");
+            message_out.print("Volts: ");
+            message_out.print(Battery_Volts / 1000 );
+            message_out.print(" Amps: ");
+            message_out.print(sys_status.current_battery);
+            //message_out.print(" Sensors: ");
+            //message_out.print(sys_status.onboard_control_sensors_health);
+            //message_out.print("], [Comms loss (%): ");
+            //message_out.print(sys_status.drop_rate_comm);
+            //message_out.print("] ");
 
           }
           break;
@@ -212,17 +212,17 @@ void comm_receive() {
             mavlink_param_value_t param_value;
             mavlink_msg_param_value_decode(&msg, &param_value);
 
-            Serial.println("PX PARAM_VALUE");
-            Serial.print(" Value: ");
-            Serial.print(param_value.param_value);
-            Serial.print(" Count: ");
-            Serial.print(param_value.param_count);
-            Serial.print(" Index: ");
-            Serial.print(param_value.param_index);
-            Serial.print(" ID: ");
-            Serial.print(param_value.param_id);
-            Serial.print(" Type: ");
-            Serial.print(param_value.param_type);
+            message_out.println("PX PARAM_VALUE");
+            message_out.print(" Value: ");
+            message_out.print(param_value.param_value);
+            message_out.print(" Count: ");
+            message_out.print(param_value.param_count);
+            message_out.print(" Index: ");
+            message_out.print(param_value.param_index);
+            message_out.print(" ID: ");
+            message_out.print(param_value.param_id);
+            message_out.print(" Type: ");
+            message_out.print(param_value.param_type);
           }
           break;
 
@@ -233,8 +233,8 @@ void comm_receive() {
              */
             mavlink_raw_imu_t raw_imu;
             mavlink_msg_raw_imu_decode(&msg, &raw_imu);
-            //Serial.println("PX RAW IMU");
-            //Serial.println(raw_imu.xacc);
+            //message_out.println("PX RAW IMU");
+            //message_out.println(raw_imu.xacc);
 
           }
           break;
@@ -247,12 +247,12 @@ void comm_receive() {
             mavlink_attitude_t attitude;
             mavlink_msg_attitude_decode(&msg, &attitude);
 
-            Serial.print(" ROLL : ");
-            Serial.print(attitude.roll);
-            Serial.print(" YAW : ");
-            Serial.print(attitude.yaw);
-            Serial.print(" PITCH : ");
-            Serial.println(attitude.pitch);
+            message_out.print(" ROLL : ");
+            message_out.print(attitude.roll);
+            message_out.print(" YAW : ");
+            message_out.print(attitude.yaw);
+            message_out.print(" PITCH : ");
+            message_out.println(attitude.pitch);
           }
           break;
 

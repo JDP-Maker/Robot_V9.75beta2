@@ -21,16 +21,16 @@ if (Mower_PIXHAWK == 0) {
 
         }
 /*
-      Serial.print(F("Time:"));  
-      if (Time_Hour < 10) Serial.print(F("0"));
-      Serial.print(Time_Hour);
-      Serial.print(F(":"));
-      if (Time_Minute < 10) Serial.print(F("0"));
-      Serial.print(Time_Minute);
-      Serial.print(F(":"));
-      if (Time_Second < 10) Serial.print(F("0"));
-      Serial.print(Time_Second);
-      Serial.print(F("|"));
+      message_out.print(F("Time:"));  
+      if (Time_Hour < 10) message_out.print(F("0"));
+      message_out.print(Time_Hour);
+      message_out.print(F(":"));
+      if (Time_Minute < 10) message_out.print(F("0"));
+      message_out.print(Time_Minute);
+      message_out.print(F(":"));
+      if (Time_Second < 10) message_out.print(F("0"));
+      message_out.print(Time_Second);
+      message_out.print(F("|"));
 */
       PrintTimeToSerial(0, 0, 0, 0, Time_Hour, Time_Minute, Time_Second, 0, 0);
       }
@@ -38,7 +38,7 @@ if (Mower_PIXHAWK == 0) {
 
 // Arduino RTC Clock Module
 void DisplayTime_DS1302()   {
-  Serial.print(F("Time:"));
+  message_out.print(F("Time:"));
   Time t = rtc.time();  
  
   // Name the day of the week.
@@ -52,7 +52,7 @@ void DisplayTime_DS1302()   {
            t.hr, t.min, t.sec);
 
   // Print the formatted string to serial so we can see the time.
-  Serial.print(buf);
+  message_out.print(buf);
  
   }
 
@@ -63,47 +63,47 @@ void PrintTimeToSerial(byte _type, int _year, byte _month, byte _date, byte _hou
 	// _type 1: date time
 	// _type 2: date time DoW
 
-	// _endType 0: Serial.print(F("|"));
-	// _endType 1: Serial.println("");
+	// _endType 0: message_out.print(F("|"));
+	// _endType 1: message_out.println("");
 
 
-	if (_type > 0) Serial.print(F("DateTime: "));
-	else Serial.print(F("Time:"));
+	if (_type > 0) message_out.print(F("DateTime: "));
+	else message_out.print(F("Time:"));
 
 	if (_type > 0) {
-		Serial.print(_year);
-		Serial.print(F("-"));
-		if (_month < 10) Serial.print(F("0"));
-		Serial.print(_month);
-		Serial.print(F("-"));
-		if (_date < 10) Serial.print(F("0"));
-		Serial.print(_date);
-		Serial.print(F(" "));
+		message_out.print(_year);
+		message_out.print(F("-"));
+		if (_month < 10) message_out.print(F("0"));
+		message_out.print(_month);
+		message_out.print(F("-"));
+		if (_date < 10) message_out.print(F("0"));
+		message_out.print(_date);
+		message_out.print(F(" "));
 	}
-		if (_hour < 10) Serial.print(F("0"));
-		Serial.print(_hour);
-		Serial.print(F(":"));
-		if (_minute < 10) Serial.print(F("0"));
-		Serial.print(_minute);
-		Serial.print(F(":"));
-		if (_second < 10) Serial.print(F("0"));
-		Serial.print(_second);
+		if (_hour < 10) message_out.print(F("0"));
+		message_out.print(_hour);
+		message_out.print(F(":"));
+		if (_minute < 10) message_out.print(F("0"));
+		message_out.print(_minute);
+		message_out.print(F(":"));
+		if (_second < 10) message_out.print(F("0"));
+		message_out.print(_second);
 
 	if (_type == 2) {
 		char buf[15];
 		const String day = dayAsString((Time::Day)_dow);
 		snprintf(buf, sizeof(buf), " %s", day.c_str());
-		Serial.print(buf);
+		message_out.print(buf);
 	}
 
 	if (_type > 2) {
-		Serial.print(F("bad _type on PrintTimeToSerial()"));
+		message_out.print(F("bad _type on PrintTimeToSerial()"));
 	}
 
 	if (_endType) {
-		Serial.println("");
+		message_out.println("");
 	} else {
-		Serial.print(F("|"));
+		message_out.print(F("|"));
 	}
 }
 
@@ -192,9 +192,9 @@ void Activate_Alarms() {
   // Manual ALARM 1
   if (Alarm_1_ON == 1) {  
      if ((Time_Hour== Alarm_1_Hour) && (Time_Minute == Alarm_1_Minute)) {
-       Serial.println(F(""));
-       Serial.println(F("ALARM 1 - Activated "));
-       Serial.println(F(""));
+       message_out.println(F(""));
+       message_out.println(F("ALARM 1 - Activated "));
+       message_out.println(F(""));
        delay(2000);
 
         // Exit Dock : Zone 1
@@ -214,7 +214,7 @@ void Activate_Alarms() {
 
        
        if (Alarm_1_Action == 5) {                                    // Custom Option
-        Serial.println(F("Insert Custom Code"));
+        message_out.println(F("Insert Custom Code"));
          }      
        }
     }
@@ -223,9 +223,9 @@ void Activate_Alarms() {
   // Manual ALARM 2
   if (Alarm_2_ON == 1) {  
      if ((Time_Hour == Alarm_2_Hour) && (Time_Minute == Alarm_2_Minute)) {
-       Serial.println(F(""));
-       Serial.println(F("ALARM 2 - Activated "));
-       Serial.println(F(""));
+       message_out.println(F(""));
+       message_out.println(F("ALARM 2 - Activated "));
+       message_out.println(F(""));
        delay(2000);
 
         // Exit Dock : Zone 1
@@ -245,7 +245,7 @@ void Activate_Alarms() {
 
        
        if (Alarm_2_Action == 5) {                                    // Custom Option
-        Serial.println(F("Insert Custom Code"));
+        message_out.println(F("Insert Custom Code"));
          }      
        }
     }
@@ -253,9 +253,9 @@ void Activate_Alarms() {
   // Manual ALARM 3
   if (Alarm_3_ON == 1) {  
      if ((Time_Hour == Alarm_3_Hour) && (Time_Minute == Alarm_3_Minute)) {
-       Serial.println(F(""));
-       Serial.println(F("ALARM 3 - Activated "));
-       Serial.println(F(""));
+       message_out.println(F(""));
+       message_out.println(F("ALARM 3 - Activated "));
+       message_out.println(F(""));
        delay(2000);
 
         // Exit Dock : Zone 1
@@ -275,7 +275,7 @@ void Activate_Alarms() {
 
        
        if (Alarm_3_Action == 5) {                                    // Custom Option
-        Serial.println(F("Insert Custom Code"));
+        message_out.println(F("Insert Custom Code"));
          }      
        }
     }
@@ -284,8 +284,8 @@ void Activate_Alarms() {
 
 
 void Alarm_Start_Exit_Zone_2() {
-         Serial.print(F("Exit Dock| "));
-         Serial.println(F("Zone 2"));
+         message_out.print(F("Exit Dock| "));
+         message_out.println(F("Zone 2"));
        
          #if defined(LCD_KEYPAD)
            lcd.clear();
@@ -310,8 +310,8 @@ void Alarm_Start_Exit_Zone_2() {
 
 void Alarm_Start_Exit_Zone_1() {
   
-         Serial.print(F("Exit Dock| "));
-         Serial.println(F("Zone 1"));
+         message_out.print(F("Exit Dock| "));
+         message_out.println(F("Zone 1"));
        
          #if defined(LCD_KEYPAD)
            lcd.clear();
@@ -332,7 +332,7 @@ void Alarm_Start_Exit_Zone_1() {
 
 
  void Alarm_Start_Quick_Go() {
-   Serial.println(F("Alarm - Quick Start"));
+   message_out.println(F("Alarm - Quick Start"));
    #if defined(LCD_KEYPAD)
      lcd.clear();
      lcd.setCursor(0,0);
@@ -347,7 +347,7 @@ void Alarm_Start_Exit_Zone_1() {
      #endif 
      if (TFT_Screen_Menu == 1) Send_Mower_Docked_Data();    // Send the Docked TX Data package to the mower.
      }    
-   else Serial.println(F("Mower Docked - Quick Start not possible"));   
+   else message_out.println(F("Mower Docked - Quick Start not possible"));   
    }
 
 
@@ -357,7 +357,7 @@ void Check_Timed_Mow() {
     
   if (Alarm_Timed_Mow_ON == 1) {  
      if ((Time_Hour == Alarm_Timed_Mow_Hour) && (Time_Minute == Alarm_Timed_Mow_Minute)) {
-       Serial.println(F("Timed Mow Complete"));
+       message_out.println(F("Timed Mow Complete"));
        delay(2000);
        //Insert action for Timed Mow Alarm Here
          if (Use_Charging_Station == 1) Manouver_Go_To_Charging_Station();                       // Stops the mowing and sends the mower back to the charging station via the permieter wire
@@ -372,34 +372,34 @@ void Display_Next_Alarm()  {
   //Print_Day();
   
   if (Alarm_1_ON == 1 ) {
-      Serial.print(F("|Alarm 1:"));
-      Serial.print(Alarm_1_Hour);
-      Serial.print(F(":"));
-      if (Alarm_1_Minute < 10) Serial.print ("0");
-      Serial.print(Alarm_1_Minute);
-      Serial.print("|");
+      message_out.print(F("|Alarm 1:"));
+      message_out.print(Alarm_1_Hour);
+      message_out.print(F(":"));
+      if (Alarm_1_Minute < 10) message_out.print ("0");
+      message_out.print(Alarm_1_Minute);
+      message_out.print("|");
       }
-  if (Alarm_1_ON == 0) Serial.print("|A1arm_1:OFF");
+  if (Alarm_1_ON == 0) message_out.print("|A1arm_1:OFF");
  
   if (Alarm_2_ON == 1) {
-  Serial.print(F("|Alarm 2:"));
-  Serial.print(Alarm_2_Hour);
-  Serial.print(F(":"));
-  if (Alarm_2_Minute < 10) Serial.print ("0");
-  Serial.print(Alarm_2_Minute);
-  Serial.print("|");
+  message_out.print(F("|Alarm 2:"));
+  message_out.print(Alarm_2_Hour);
+  message_out.print(F(":"));
+  if (Alarm_2_Minute < 10) message_out.print ("0");
+  message_out.print(Alarm_2_Minute);
+  message_out.print("|");
   }
-  if (Alarm_2_ON == 0) Serial.print("|Alarm_2:OFF");
+  if (Alarm_2_ON == 0) message_out.print("|Alarm_2:OFF");
   
   if (Alarm_3_ON == 1) {
-  Serial.print(F("|Alarm 3:"));
-  Serial.print(Alarm_3_Hour);
-  Serial.print(F(":"));
-  if (Alarm_3_Minute < 10) Serial.print ("0");
-  Serial.print(Alarm_3_Minute);
-  Serial.print("|");
+  message_out.print(F("|Alarm 3:"));
+  message_out.print(Alarm_3_Hour);
+  message_out.print(F(":"));
+  if (Alarm_3_Minute < 10) message_out.print ("0");
+  message_out.print(Alarm_3_Minute);
+  message_out.print("|");
   }
-  if (Alarm_3_ON == 0) Serial.print("|Alarm_3:OFF");
+  if (Alarm_3_ON == 0) message_out.print("|Alarm_3:OFF");
 
    
 }
@@ -441,14 +441,14 @@ void Manual_Set_Time_DS3231() {
 void Mow_Time(byte _mowTime) {
 	Mow_Time_Set = _mowTime;
 
-	Serial.print(F("Mow Time Selected = "));
+	message_out.print(F("Mow Time Selected = "));
 	if ( (Mow_Time_Set == 1) || (Mow_Time_Set == 2 ) ){
-		Serial.print(Mow_Time_Set);
-		Serial.println(" hrs");
+		message_out.print(Mow_Time_Set);
+		message_out.println(" hrs");
 		}
-	if (Mow_Time_Set == 3) Serial.println(F("Max Mow Time"));
+	if (Mow_Time_Set == 3) message_out.println(F("Max Mow Time"));
 
-	Serial.println(F(" "));
+	message_out.println(F(" "));
 
 	if (Mow_Time_Set == 3) Alarm_Timed_Mow_ON = 0;
 	if (Mow_Time_Set < 3) {
@@ -458,13 +458,13 @@ void Mow_Time(byte _mowTime) {
 		Alarm_Timed_Mow_Hour = Time_Hour +  Mow_Time_Set;     // Sets time to (+Mow_Time_Set 1 or 2 )hour later.
 		Alarm_Timed_Mow_Minute = Time_Minute;                  // Minutes are the same
 
-		Serial.print(F("Mow Time Ends: "));
+		message_out.print(F("Mow Time Ends: "));
 		if (Alarm_Timed_Mow_Hour > 23) Alarm_Timed_Mow_Hour = Alarm_Timed_Mow_Hour - 24;
-		if (Alarm_Timed_Mow_Hour < 10) Serial.print(F("0"));
-		Serial.print(Alarm_Timed_Mow_Hour);
-		Serial.print(F(":"));
-		if (Alarm_Timed_Mow_Minute < 10) Serial.print(F("0"));
-		Serial.print(Alarm_Timed_Mow_Minute);
+		if (Alarm_Timed_Mow_Hour < 10) message_out.print(F("0"));
+		message_out.print(Alarm_Timed_Mow_Hour);
+		message_out.print(F(":"));
+		if (Alarm_Timed_Mow_Minute < 10) message_out.print(F("0"));
+		message_out.print(Alarm_Timed_Mow_Minute);
 	}
 }
 

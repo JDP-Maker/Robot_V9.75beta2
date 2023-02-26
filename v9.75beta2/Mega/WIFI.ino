@@ -136,8 +136,8 @@ void Transmit_All_To_NODEMCU() {
 
 void Transmit_APP_Buttons_Status_1() {
 
-  Serial.println(F(""));
-  Serial.print(F("|Updating APP Buttons 1"));
+  message_out.println(F(""));
+  message_out.print(F("|Updating APP Buttons 1"));
   
   delay(200);
   Serial2.print(Compass_Activate);
@@ -162,28 +162,28 @@ void Transmit_APP_Buttons_Status_1() {
   Serial2.println("\g");
   delay(200);
 
-  Serial.println("");
-  Serial.print(F("Compass_Activate :"));
-  Serial.println(Compass_Activate);
-  Serial.print(F("Heading Hold TX :"));
-  Serial.println(Compass_Heading_Hold_Enabled);  
-  Serial.print(F("GYRO TX :"));
-  Serial.println(GYRO_Enabled);
-  Serial.print(F("Sonar 1 ON :"));
-  Serial.println(Sonar_1_Activate);
-  Serial.print(F("Sonar 2 ON :"));
-  Serial.println(Sonar_2_Activate);
-  Serial.print(F("Sonar 3 ON :"));
-  Serial.println(Sonar_3_Activate);
-  Serial.print(F("Bumper ON:"));
-  Serial.println(Bumper_Activate_Frnt);
-  Serial.println("");
+  message_out.println("");
+  message_out.print(F("Compass_Activate :"));
+  message_out.println(Compass_Activate);
+  message_out.print(F("Heading Hold TX :"));
+  message_out.println(Compass_Heading_Hold_Enabled);  
+  message_out.print(F("GYRO TX :"));
+  message_out.println(GYRO_Enabled);
+  message_out.print(F("Sonar 1 ON :"));
+  message_out.println(Sonar_1_Activate);
+  message_out.print(F("Sonar 2 ON :"));
+  message_out.println(Sonar_2_Activate);
+  message_out.print(F("Sonar 3 ON :"));
+  message_out.println(Sonar_3_Activate);
+  message_out.print(F("Bumper ON:"));
+  message_out.println(Bumper_Activate_Frnt);
+  message_out.println("");
   }
 
 void Transmit_APP_Buttons_Status_2() {
 
-  Serial.println(F(""));
-  Serial.print(F("|Updating APP Buttons 2"));
+  message_out.println(F(""));
+  message_out.print(F("|Updating APP Buttons 2"));
   
   delay(200);
   Serial2.print(Alarm_1_ON);
@@ -208,22 +208,22 @@ void Transmit_APP_Buttons_Status_2() {
   Serial2.println("\g");
   delay(200);
 
-  Serial.println("");
-  Serial.print(F("Alarm 1 ON :"));
-  Serial.println(Alarm_1_ON);
-  Serial.print(F("Alarm 2 ON :"));
-  Serial.println(Alarm_2_ON);
-  Serial.print(F("Alarm 3 ON :"));
-  Serial.println(Alarm_3_ON);
-  Serial.print(F("GPS Enabled :"));
-  Serial.println(GPS_Enabled);
-  Serial.print(F("Angle Sensor :"));
-  Serial.println(Angle_Sensor_Enabled );
-  Serial.print(F("Tip Over Sensor :"));
-  Serial.println(Tip_Over_Sensor_Enabled);
-  Serial.print(F("Wheel Amp Sensor ON:"));
-  Serial.println(Wheel_Amp_Sensor_ON);
-  Serial.println("");
+  message_out.println("");
+  message_out.print(F("Alarm 1 ON :"));
+  message_out.println(Alarm_1_ON);
+  message_out.print(F("Alarm 2 ON :"));
+  message_out.println(Alarm_2_ON);
+  message_out.print(F("Alarm 3 ON :"));
+  message_out.println(Alarm_3_ON);
+  message_out.print(F("GPS Enabled :"));
+  message_out.println(GPS_Enabled);
+  message_out.print(F("Angle Sensor :"));
+  message_out.println(Angle_Sensor_Enabled );
+  message_out.print(F("Tip Over Sensor :"));
+  message_out.println(Tip_Over_Sensor_Enabled);
+  message_out.print(F("Wheel Amp Sensor ON:"));
+  message_out.println(Wheel_Amp_Sensor_ON);
+  message_out.println("");
   }
 
 
@@ -241,17 +241,17 @@ delay(30);
        if (Mower_Docked == 1)   {  
     
        // Update the TFT Display
-       Serial.println(F(""));
-       Serial.println(F("Updating TFT: WIFI Exit dock"));
+       message_out.println(F(""));
+       message_out.println(F("Updating TFT: WIFI Exit dock"));
        Exiting_Dock = 1;
        Mower_Error_Value = 0;
        Send_Mower_Docked_Data();                                   // Send the Docked TX Data package to the mower.
          
-       Serial.println(F(""));
-       Serial.print(F("WIFI Command: ")); 
-       Serial.print(val_WIFI);
-       Serial.print(F("Exit Dock| "));
-       Serial.println(F("Zone 1"));
+       message_out.println(F(""));
+       message_out.print(F("WIFI Command: ")); 
+       message_out.print(val_WIFI);
+       message_out.print(F("Exit Dock| "));
+       message_out.println(F("Zone 1"));
        
        #if defined(LCD_KEYPAD)
        lcd.clear();
@@ -267,17 +267,17 @@ delay(30);
        Manouver_Exit_To_Zone_X();
        }
    if (Mower_Parked == 1) {
-    Serial.println(F(""));
-    Serial.println(F("Mower is Parked, not docked"));
+    message_out.println(F(""));
+    message_out.println(F("Mower is Parked, not docked"));
    }
  }
 
  // Quick Start Button in Blynk App
  if (val_WIFI == 13) {
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command:")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Quick Start"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command:")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Quick Start"));
    
    #if defined(LCD_KEYPAD)
    lcd.clear();
@@ -285,7 +285,7 @@ delay(30);
    lcd.print(F("WIFI Start"));
    #endif
    
-   Serial.println(F("Quick Start"));
+   message_out.println(F("Quick Start"));
    if (Mower_Docked == 0) { 
      Manouver_Start_Mower();
      #if defined(LCD_KEYPAD)
@@ -293,15 +293,15 @@ delay(30);
      #endif 
      if (TFT_Screen_Menu == 1) Send_Mower_Docked_Data();    // Send the Docked TX Data package to the mower.
      }    
-   else Serial.println(F("Mower Docked - Quick Start not possible"));   
+   else message_out.println(F("Mower Docked - Quick Start not possible"));   
    }
 
 // Go To Dock Button in Blynk App
  if (val_WIFI == 12) {
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Go To Dock"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Go To Dock"));
    
    #if defined(LCD_KEYPAD)
    lcd.clear();
@@ -323,20 +323,20 @@ delay(30);
 
 // STOP / Cancel Button in Blynk App
  if (val_WIFI == 11)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Pause/Stop"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Pause/Stop"));
    Manouver_Park_The_Mower(); 
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    }
 
 // Manuel Button in Blynk App
  if (val_WIFI == 15)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Manuel Mode"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Manuel Mode"));
    Manouver_Park_The_Mower(); 
    delay(500);
    Manouver_Manuel_Mode(); 
@@ -346,10 +346,10 @@ delay(30);
    
 // Automatic RANDOM Button in Blynk App
  if (val_WIFI == 16)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Automatic Mode RANDOM"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Automatic Mode RANDOM"));
    
    #if defined(LCD_KEYPAD)
    lcd.clear();
@@ -370,10 +370,10 @@ delay(30);
 
 // Automatic SPIRAL Button in Blynk App
  if (val_WIFI == 21)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Automatic Mode SPIRAL"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Automatic Mode SPIRAL"));
    
    #if defined(LCD_KEYPAD)
    lcd.clear();
@@ -395,10 +395,10 @@ delay(30);
 
 // Automatic Parallel Button in Blynk App
  if (val_WIFI == 22)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Automatic Mode PARALLEL"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Automatic Mode PARALLEL"));
    
    #if defined(LCD_KEYPAD)
    lcd.clear();
@@ -422,391 +422,391 @@ delay(30);
 
 // Compass Setting Via WIFI.
  if (val_WIFI == 40)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Compass ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Compass ON"));
    Compass_Activate = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(19 , 1);
    dueFlashStorage.write(20 , Compass_Activate);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(19 , 1);
    EEPROM.write(20 , Compass_Activate);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
  if (val_WIFI == 41)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Compass OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Compass OFF"));
    Compass_Activate = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(19 , 1);
    dueFlashStorage.write(20 , Compass_Activate);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(19 , 1);
    EEPROM.write(20 , Compass_Activate);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 // Heading Hold
  if (val_WIFI == 42)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Heading Hold ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Heading Hold ON"));
    Compass_Heading_Hold_Enabled = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(59 , 1);
    dueFlashStorage.write(60 , Compass_Heading_Hold_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(59 , 1);
    EEPROM.write(60 , Compass_Heading_Hold_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
   
  if (val_WIFI == 43)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Heading Hold OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Heading Hold OFF"));
    Compass_Heading_Hold_Enabled = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(59 , 1);
    dueFlashStorage.write(60 , Compass_Heading_Hold_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(59 , 1);
    EEPROM.write(60 , Compass_Heading_Hold_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 // GYRO
  if (val_WIFI == 44)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|GYRO ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|GYRO ON"));
    GYRO_Enabled = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(109 , 1);
    dueFlashStorage.write(110, GYRO_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(109 , 1);
    EEPROM.write(110, GYRO_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
   
  if (val_WIFI == 45)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|GYRO OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|GYRO OFF"));
    GYRO_Enabled = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(109 , 1);
    dueFlashStorage.write(110, GYRO_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(109 , 1);
    EEPROM.write(110, GYRO_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // SONAR 1 Setting Via WIFI.
  if (val_WIFI == 47)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|SONAR 1 ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|SONAR 1 ON"));
    Sonar_1_Activate = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(37, 1);
    dueFlashStorage.write(38, Sonar_1_Activate);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(37, 1);
    EEPROM.write(38, Sonar_1_Activate);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
    
  if (val_WIFI == 48)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|SONAR 1 OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|SONAR 1 OFF"));
    Sonar_1_Activate = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(37, 1);
    dueFlashStorage.write(38, Sonar_1_Activate);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(37, 1);
    EEPROM.write(38, Sonar_1_Activate);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // SONAR 2 Setting Via WIFI.
  if (val_WIFI == 49)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|SONAR 2 ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|SONAR 2 ON"));
    Sonar_2_Activate = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(39, 1);
    dueFlashStorage.write(40, Sonar_2_Activate);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(39, 1);
    EEPROM.write(40, Sonar_2_Activate);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
   
  if (val_WIFI == 50)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|SONAR 2 OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|SONAR 2 OFF"));
    Sonar_2_Activate = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(39, 1);
    dueFlashStorage.write(40, Sonar_2_Activate);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(39, 1);
    EEPROM.write(40, Sonar_2_Activate);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // SONAR 3 Setting Via WIFI.
  if (val_WIFI == 51)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|SONAR 3 ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|SONAR 3 ON"));
    Sonar_3_Activate = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
    dueFlashStorage.write(41, 1);
    dueFlashStorage.write(42, Sonar_3_Activate);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(41, 1);
    EEPROM.write(42, Sonar_3_Activate);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
   
  if (val_WIFI == 52)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|SONAR 3 OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|SONAR 3 OFF"));
    Sonar_3_Activate = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
      dueFlashStorage.write(41, 1);
      dueFlashStorage.write(42, Sonar_3_Activate);
-     Serial.println(F("Saved to dueFlashStorage"));
+     message_out.println(F("Saved to dueFlashStorage"));
      #endif 
 
    #if defined(BOARD_MEGA)
      EEPROM.write(41, 1);
      EEPROM.write(42, Sonar_3_Activate);
-     Serial.println(F("Saved to dueFlashStorage"));
+     message_out.println(F("Saved to dueFlashStorage"));
      #endif 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // Bumper Setting Via WIFI.
  if (val_WIFI == 53)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Bumper ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Bumper ON"));
    Bumper_Activate_Frnt = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
      dueFlashStorage.write(90 , 1);
      dueFlashStorage.write(91 , Bumper_Activate_Frnt);
-     Serial.println(F("Saved to dueFlashStorage"));
+     message_out.println(F("Saved to dueFlashStorage"));
      #endif
 
    #if defined(BOARD_MEGA)
      EEPROM.write(90 , 1);
      EEPROM.write(91 , Bumper_Activate_Frnt);
-     Serial.println(F("Saved to EEPROM"));
+     message_out.println(F("Saved to EEPROM"));
      #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 
  if (val_WIFI == 54)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Bumper OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Bumper OFF"));
    Bumper_Activate_Frnt = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
    
    #if defined(BOARD_DUE)
      dueFlashStorage.write(90 , 1);
      dueFlashStorage.write(91 , Bumper_Activate_Frnt);
-     Serial.println(F("Saved to dueFlashStorage"));
+     message_out.println(F("Saved to dueFlashStorage"));
      #endif
    
    #if defined(BOARD_MEGA)
      EEPROM.write(90 , 1);
      EEPROM.write(91 , Bumper_Activate_Frnt);
-     Serial.println(F("Saved to EEPROM"));
+     message_out.println(F("Saved to EEPROM"));
      #endif   
    
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // Alarm 1 ON Setting Via WIFI.
  if (val_WIFI == 57)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Alarm 1 ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Alarm 1 ON"));
    Alarm_1_ON = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
      dueFlashStorage.write(1 , 1);
      dueFlashStorage.write(4 , Alarm_1_ON);
-     Serial.println(F("Saved to dueFlashStorage"));
+     message_out.println(F("Saved to dueFlashStorage"));
      #endif
 
    #if defined(BOARD_MEGA)
      EEPROM.write(1 , 1);
      EEPROM.write(4 , Alarm_1_ON);
-     Serial.println(F("Saved to EEPROM"));
+     message_out.println(F("Saved to EEPROM"));
      #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // Alarm 1 OFF Setting Via WIFI.
  if (val_WIFI == 58)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Alarm 1 OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Alarm 1 OFF"));
    Alarm_1_ON = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
      dueFlashStorage.write(1 , 1);
      dueFlashStorage.write(4 , Alarm_1_ON);
-     Serial.println(F("Saved to dueFlashStorage"));
+     message_out.println(F("Saved to dueFlashStorage"));
      #endif
 
    #if defined(BOARD_MEGA)
      EEPROM.write(1 , 1);
      EEPROM.write(4 , Alarm_1_ON);
-     Serial.println(F("Saved to EEPROM"));
+     message_out.println(F("Saved to EEPROM"));
      #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
@@ -814,566 +814,566 @@ delay(30);
 
 // Alarm 2 ON Setting Via WIFI.
  if (val_WIFI == 59)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Alarm 2 ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Alarm 2 ON"));
    Alarm_2_ON = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
      dueFlashStorage.write(5 , 1);
      dueFlashStorage.write(8 , Alarm_2_ON);
-     Serial.println(F("Saved to dueFlashStorage"));
+     message_out.println(F("Saved to dueFlashStorage"));
      #endif
 
    #if defined(BOARD_MEGA)
      EEPROM.write(5 , 1);
      EEPROM.write(8 , Alarm_2_ON);
-     Serial.println(F("Saved to EEPROM"));
+     message_out.println(F("Saved to EEPROM"));
      #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // Alarm 2 OFF Setting Via WIFI.
  if (val_WIFI == 60)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Alarm 2 OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Alarm 2 OFF"));
    Alarm_2_ON = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
      dueFlashStorage.write(5 , 1);
      dueFlashStorage.write(8 , Alarm_2_ON);
-     Serial.println(F("Saved to dueFlashStorage"));
+     message_out.println(F("Saved to dueFlashStorage"));
      #endif
 
    #if defined(BOARD_MEGA)
      EEPROM.write(5 , 1);
      EEPROM.write(8 , Alarm_2_ON);
-     Serial.println(F("Saved to EEPROM"));
+     message_out.println(F("Saved to EEPROM"));
      #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 
 // Alarm 3 ON Setting Via WIFI.
  if (val_WIFI == 61)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Alarm 3 ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Alarm 3 ON"));
    Alarm_3_ON = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(9 , 1);
    dueFlashStorage.write(12 , Alarm_3_ON);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(9 , 1);
    EEPROM.write(12 , Alarm_3_ON);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // Alarm 3 OFF Setting Via WIFI.
  if (val_WIFI == 62)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Alarm 3 OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Alarm 3 OFF"));
    Alarm_3_ON = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(9 , 1);
    dueFlashStorage.write(12 , Alarm_3_ON);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(9 , 1);
    EEPROM.write(12 , Alarm_3_ON);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 
 // GPS Enabled OFF Setting Via WIFI.
  if (val_WIFI == 65)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|GPS ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|GPS ON"));
    GPS_Enabled = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(107 , 1);
    dueFlashStorage.write(108 , GPS_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(107 , 1);
    EEPROM.write(108 , GPS_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // GPS Enabled OFF Setting Via WIFI.
  if (val_WIFI == 66)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|GPS OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|GPS OFF"));
    GPS_Enabled = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(107 , 1);
    dueFlashStorage.write(108 , GPS_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(107 , 1);
    EEPROM.write(108 , GPS_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 
 // Angle Sensor
  if (val_WIFI == 67)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Angle Sensor ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Angle Sensor ON"));
    Angle_Sensor_Enabled = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(29 , 1);
    dueFlashStorage.write(30 , Angle_Sensor_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(29 , 1);
    EEPROM.write(30 , Angle_Sensor_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // Angle Sensor
  if (val_WIFI == 68)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Angle Sensor OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Angle Sensor OFF"));
    Angle_Sensor_Enabled = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(29 , 1);
    dueFlashStorage.write(30 , Angle_Sensor_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(29 , 1);
    EEPROM.write(30 , Angle_Sensor_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 
 // Tip Sensor
  if (val_WIFI == 69)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Tip Sensor ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Tip Sensor ON"));
    Tip_Over_Sensor_Enabled = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(92 , 1);
    dueFlashStorage.write(93 , Tip_Over_Sensor_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(92 , 1);
    EEPROM.write(93 , Tip_Over_Sensor_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // Tip Sensor
  if (val_WIFI == 70)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Tip Sensor OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Tip Sensor OFF"));
    Tip_Over_Sensor_Enabled = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(92 , 1);
    dueFlashStorage.write(93 , Tip_Over_Sensor_Enabled);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(92 , 1);
    EEPROM.write(93 , Tip_Over_Sensor_Enabled);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 
 // Wheel Amp Sensor
  if (val_WIFI == 71)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Wheel Amp Sensor ON"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Wheel Amp Sensor ON"));
    Wheel_Amp_Sensor_ON = 1;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)
    dueFlashStorage.write(115 , 1);
    dueFlashStorage.write(116 , Wheel_Amp_Sensor_ON);
-   Serial.println(F("Saved to dueFlashStorage"));
+   message_out.println(F("Saved to dueFlashStorage"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(115 , 1);
    EEPROM.write(116 , Wheel_Amp_Sensor_ON);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 
 // Wheel Amp Sensor
  if (val_WIFI == 72)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Wheel Amp Sensor OFF"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Wheel Amp Sensor OFF"));
    Wheel_Amp_Sensor_ON = 0;
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
    #if defined(BOARD_DUE)   
    dueFlashStorage.write(115 , 1);
    dueFlashStorage.write(116 , Wheel_Amp_Sensor_ON);
-   Serial.println(F("Saved to DueFlash"));
+   message_out.println(F("Saved to DueFlash"));
    #endif
 
    #if defined(BOARD_MEGA)
    EEPROM.write(115 , 1);
    EEPROM.write(116 , Wheel_Amp_Sensor_ON);
-   Serial.println(F("Saved to EEPROM"));
+   message_out.println(F("Saved to EEPROM"));
    #endif
 
    
-   Serial.println(F(" "));
+   message_out.println(F(" "));
    }
 
 #if defined(WEBSERVER)
  // Wheels_Activate
   if (val_WIFI == 101)  {
-    Serial.println(F(""));
-    Serial.print(F("WIFI Command: "));
-    Serial.print(val_WIFI);
-    Serial.println(F("|Wheels_Activate ON"));
+    message_out.println(F(""));
+    message_out.print(F("WIFI Command: "));
+    message_out.print(val_WIFI);
+    message_out.println(F("|Wheels_Activate ON"));
     Wheels_Activate = 1;
     val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
     #if defined(BOARD_DUE)
     dueFlashStorage.write(123 , 1);
     dueFlashStorage.write(124 , Wheels_Activate);
-    Serial.println(F("Saved to dueFlashStorage"));
+    message_out.println(F("Saved to dueFlashStorage"));
     #endif
 
     #if defined(BOARD_MEGA)
     EEPROM.write(123, 1);
     EEPROM.write(124 , Wheels_Activate);
-    Serial.println(F("Saved to EEPROM"));
+    message_out.println(F("Saved to EEPROM"));
     #endif
 
-    Serial.println(F(" "));
+    message_out.println(F(" "));
     }
 
  // Wheels_Activate
   if (val_WIFI == 102)  {
-    Serial.println(F(""));
-    Serial.print(F("WIFI Command: "));
-    Serial.print(val_WIFI);
-    Serial.println(F("|Wheels_Activate OFF"));
+    message_out.println(F(""));
+    message_out.print(F("WIFI Command: "));
+    message_out.print(val_WIFI);
+    message_out.println(F("|Wheels_Activate OFF"));
     Wheels_Activate = 0;
     val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
     #if defined(BOARD_DUE)
     dueFlashStorage.write(123 , 1);
     dueFlashStorage.write(124 , Wheels_Activate);
-    Serial.println(F("Saved to DueFlash"));
+    message_out.println(F("Saved to DueFlash"));
     #endif
 
     #if defined(BOARD_MEGA)
     EEPROM.write(123 , 1);
     EEPROM.write(124 , Wheels_Activate);
-    Serial.println(F("Saved to EEPROM"));
+    message_out.println(F("Saved to EEPROM"));
     #endif
 
-    Serial.println(F(" "));
+    message_out.println(F(" "));
     }
 
 
   // Ramp_Motor_ON
    if (val_WIFI == 103)  {
-     Serial.println(F(""));
-     Serial.print(F("WIFI Command: "));
-     Serial.print(val_WIFI);
-     Serial.println(F("|Ramp_Motor_ON"));
+     message_out.println(F(""));
+     message_out.print(F("WIFI Command: "));
+     message_out.print(val_WIFI);
+     message_out.println(F("|Ramp_Motor_ON"));
      Ramp_Motor_ON = 1;
      val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
      #if defined(BOARD_DUE)
      //dueFlashStorage.write(x , 1);
      //dueFlashStorage.write(x , Ramp_Motor_ON);
-     //Serial.println(F("Saved to dueFlashStorage"));
+     //message_out.println(F("Saved to dueFlashStorage"));
      #endif
 
      #if defined(BOARD_MEGA)
      //EEPROM.write(x , 1);
      //EEPROM.write(x , Ramp_Motor_ON);
-     //Serial.println(F("Saved to EEPROM"));
+     //message_out.println(F("Saved to EEPROM"));
      #endif
 
 
-     Serial.println(F(" "));
+     message_out.println(F(" "));
      }
 
   // Ramp_Motor_ON
    if (val_WIFI == 104)  {
-     Serial.println(F(""));
-     Serial.print(F("WIFI Command: "));
-     Serial.print(val_WIFI);
-     Serial.println(F("|Ramp_Motor_ON OFF"));
+     message_out.println(F(""));
+     message_out.print(F("WIFI Command: "));
+     message_out.print(val_WIFI);
+     message_out.println(F("|Ramp_Motor_ON OFF"));
      Ramp_Motor_ON = 0;
      val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
      #if defined(BOARD_DUE)
      //dueFlashStorage.write(x , 1);
      //dueFlashStorage.write(x , Ramp_Motor_ON);
-     //Serial.println(F("Saved to DueFlash"));
+     //message_out.println(F("Saved to DueFlash"));
      #endif
 
      #if defined(BOARD_MEGA)
      //EEPROM.write(x , 1);
      //EEPROM.write(x , Ramp_Motor_ON);
-     //Serial.println(F("Saved to EEPROM"));
+     //message_out.println(F("Saved to EEPROM"));
      #endif
 
 
-     Serial.println(F(" "));
+     message_out.println(F(" "));
      }
 
 
 
    // MAG_Speed_Adjustment
     if (val_WIFI == 105)  {
-      Serial.println(F(""));
-      Serial.print(F("WIFI Command: "));
-      Serial.print(val_WIFI);
-      Serial.println(F("|MAG_Speed_Adjustment ON"));
+      message_out.println(F(""));
+      message_out.print(F("WIFI Command: "));
+      message_out.print(val_WIFI);
+      message_out.println(F("|MAG_Speed_Adjustment ON"));
       MAG_Speed_Adjustment = 1;
       val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
       #if defined(BOARD_DUE)
       //dueFlashStorage.write(x , 1);
       //dueFlashStorage.write(x , MAG_Speed_Adjustment);
-      //Serial.println(F("Saved to dueFlashStorage"));
+      //message_out.println(F("Saved to dueFlashStorage"));
       #endif
 
       #if defined(BOARD_MEGA)
       //EEPROM.write(x , 1);
       //EEPROM.write(x , MAG_Speed_Adjustment);
-      //Serial.println(F("Saved to EEPROM"));
+      //message_out.println(F("Saved to EEPROM"));
       #endif
 
 
-      Serial.println(F(" "));
+      message_out.println(F(" "));
       }
 
    // MAG_Speed_Adjustment
     if (val_WIFI == 106)  {
-      Serial.println(F(""));
-      Serial.print(F("WIFI Command: "));
-      Serial.print(val_WIFI);
-      Serial.println(F("|MAG_Speed_Adjustment OFF"));
+      message_out.println(F(""));
+      message_out.print(F("WIFI Command: "));
+      message_out.print(val_WIFI);
+      message_out.println(F("|MAG_Speed_Adjustment OFF"));
       MAG_Speed_Adjustment = 0;
       val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
       #if defined(BOARD_DUE)
       //dueFlashStorage.write(x , 1);
       //dueFlashStorage.write(x , MAG_Speed_Adjustment);
-      //Serial.println(F("Saved to DueFlash"));
+      //message_out.println(F("Saved to DueFlash"));
       #endif
 
       #if defined(BOARD_MEGA)
       //EEPROM.write(x , 1);
       //EEPROM.write(x , MAG_Speed_Adjustment);
-      //Serial.println(F("Saved to EEPROM"));
+      //message_out.println(F("Saved to EEPROM"));
       #endif
 
 
-      Serial.println(F(" "));
+      message_out.println(F(" "));
       }
 
     // Perimeter_Wire_Enabled
      if (val_WIFI == 107)  {
-       Serial.println(F(""));
-       Serial.print(F("WIFI Command: "));
-       Serial.print(val_WIFI);
-       Serial.println(F("|Perimeter_Wire_Enabled ON"));
+       message_out.println(F(""));
+       message_out.print(F("WIFI Command: "));
+       message_out.print(val_WIFI);
+       message_out.println(F("|Perimeter_Wire_Enabled ON"));
        Perimeter_Wire_Enabled = 1;
        val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
        #if defined(BOARD_DUE)
        dueFlashStorage.write(67, 1);
        dueFlashStorage.write(68, Perimeter_Wire_Enabled);
-       Serial.println(F("Saved to dueFlashStorage"));
+       message_out.println(F("Saved to dueFlashStorage"));
        #endif
 
        #if defined(BOARD_MEGA)
        EEPROM.write(67, 1);
        EEPROM.write(68, Perimeter_Wire_Enabled);
-       Serial.println(F("Saved to EEPROM"));
+       message_out.println(F("Saved to EEPROM"));
        #endif
 
-       Serial.println(F(" "));
+       message_out.println(F(" "));
        }
 
     // Perimeter_Wire_Enabled
      if (val_WIFI == 108)  {
-       Serial.println(F(""));
-       Serial.print(F("WIFI Command: "));
-       Serial.print(val_WIFI);
-       Serial.println(F("|Perimeter_Wire_Enabled OFF"));
+       message_out.println(F(""));
+       message_out.print(F("WIFI Command: "));
+       message_out.print(val_WIFI);
+       message_out.println(F("|Perimeter_Wire_Enabled OFF"));
        Perimeter_Wire_Enabled = 0;
        val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
        #if defined(BOARD_DUE)
        dueFlashStorage.write(67, 1);
        dueFlashStorage.write(68, Perimeter_Wire_Enabled);
-       Serial.println(F("Saved to DueFlash"));
+       message_out.println(F("Saved to DueFlash"));
        #endif
 
        #if defined(BOARD_MEGA)
        EEPROM.write(67, 1);
        EEPROM.write(68, Perimeter_Wire_Enabled);
-       Serial.println(F("Saved to EEPROM"));
+       message_out.println(F("Saved to EEPROM"));
        #endif
 
-       Serial.println(F(" "));
+       message_out.println(F(" "));
        }
 
      // Use_Charging_Station
       if (val_WIFI == 109)  {
-        Serial.println(F(""));
-        Serial.print(F("WIFI Command: "));
-        Serial.print(val_WIFI);
-        Serial.println(F("|Use_Charging_Station ON"));
+        message_out.println(F(""));
+        message_out.print(F("WIFI Command: "));
+        message_out.print(val_WIFI);
+        message_out.println(F("|Use_Charging_Station ON"));
         Use_Charging_Station = 1;
         val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
         #if defined(BOARD_DUE)
         dueFlashStorage.write(47, 1);
         dueFlashStorage.write(48, Use_Charging_Station);
-        Serial.println(F("Saved to dueFlashStorage"));
+        message_out.println(F("Saved to dueFlashStorage"));
         #endif
 
         #if defined(BOARD_MEGA)
         EEPROM.write(47, 1);
         EEPROM.write(48, Use_Charging_Station);
-        Serial.println(F("Saved to EEPROM"));
+        message_out.println(F("Saved to EEPROM"));
         #endif
 
-        Serial.println(F(" "));
+        message_out.println(F(" "));
         }
 
      // Use_Charging_Station
       if (val_WIFI == 110)  {
-        Serial.println(F(""));
-        Serial.print(F("WIFI Command: "));
-        Serial.print(val_WIFI);
-        Serial.println(F("|Use_Charging_Station OFF"));
+        message_out.println(F(""));
+        message_out.print(F("WIFI Command: "));
+        message_out.print(val_WIFI);
+        message_out.println(F("|Use_Charging_Station OFF"));
         Use_Charging_Station = 0;
         val_WIFI = 0;   // reset val2 to zero so the command is only executed once
 
         #if defined(BOARD_DUE)
         dueFlashStorage.write(47, 1);
         dueFlashStorage.write(48, Use_Charging_Station);
-        Serial.println(F("Saved to DueFlash"));
+        message_out.println(F("Saved to DueFlash"));
         #endif
 
         #if defined(BOARD_MEGA)
         EEPROM.write(47, 1);
         EEPROM.write(48, Use_Charging_Station);
-        Serial.println(F("Saved to EEPROM"));
+        message_out.println(F("Saved to EEPROM"));
         #endif
 
-        Serial.println(F(" "));
+        message_out.println(F(" "));
         }
 
 
@@ -1381,99 +1381,99 @@ delay(30);
 
     // Fake_All_Settings
      if (val_WIFI == 120 || val_WIFI == 121)  {
-       Serial.println(F(""));
-       Serial.print(F("WIFI Command: "));
-       Serial.print(val_WIFI);
-       Serial.print(F("|Fake_All_Settings"));
+       message_out.println(F(""));
+       message_out.print(F("WIFI Command: "));
+       message_out.print(val_WIFI);
+       message_out.print(F("|Fake_All_Settings"));
        if (val_WIFI == 120) {
-    	   Serial.println(F(" ON"));
+    	   message_out.println(F(" ON"));
     	   Fake_All_Settings = 1;
        }
        else if (val_WIFI == 121) {
-    	   Serial.println(F(" OFF"));
+    	   message_out.println(F(" OFF"));
            Fake_All_Settings = 0;
        }
        val_WIFI = 0;   // reset val2 to zero so the command is only executed once
-       Serial.println(F(" "));
+       message_out.println(F(" "));
        }
 
      // Fake_Loops
       if (val_WIFI == 122 || val_WIFI == 123)  {
-        Serial.println(F(""));
-        Serial.print(F("WIFI Command: "));
-        Serial.print(val_WIFI);
-        Serial.print(F("|Fake_Loops"));
+        message_out.println(F(""));
+        message_out.print(F("WIFI Command: "));
+        message_out.print(val_WIFI);
+        message_out.print(F("|Fake_Loops"));
         if (val_WIFI == 122) {
-     	   Serial.println(F(" ON"));
+     	   message_out.println(F(" ON"));
      	  Fake_Loops = 1;
         }
         else if (val_WIFI == 123) {
-     	   Serial.println(F(" OFF"));
+     	   message_out.println(F(" OFF"));
      	  Fake_Loops = 0;
         }
         val_WIFI = 0;   // reset val2 to zero so the command is only executed once
-        Serial.println(F(" "));
+        message_out.println(F(" "));
         }
 
       // Fake_Wire
        if (val_WIFI == 124 || val_WIFI == 125)  {
-         Serial.println(F(""));
-         Serial.print(F("WIFI Command: "));
-         Serial.print(val_WIFI);
-         Serial.print(F("|Fake_Wire"));
+         message_out.println(F(""));
+         message_out.print(F("WIFI Command: "));
+         message_out.print(val_WIFI);
+         message_out.print(F("|Fake_Wire"));
          if (val_WIFI == 125) {
-      	   Serial.println(F(" ON"));
+      	   message_out.println(F(" ON"));
       	 Fake_Wire = 1;
          }
          else if (val_WIFI == 125) {
-      	   Serial.println(F(" OFF"));
+      	   message_out.println(F(" OFF"));
       	 Fake_Wire = 0;
          }
          val_WIFI = 0;   // reset val2 to zero so the command is only executed once
-         Serial.println(F(" "));
+         message_out.println(F(" "));
          }
 
        // Fake_WheelAmp
         if (val_WIFI == 126 || val_WIFI == 127)  {
-          Serial.println(F(""));
-          Serial.print(F("WIFI Command: "));
-          Serial.print(val_WIFI);
-          Serial.print(F("|Fake_WheelAmp"));
+          message_out.println(F(""));
+          message_out.print(F("WIFI Command: "));
+          message_out.print(val_WIFI);
+          message_out.print(F("|Fake_WheelAmp"));
           if (val_WIFI == 126) {
-       	   Serial.println(F(" ON"));
+       	   message_out.println(F(" ON"));
        	   Fake_WheelAmp = 1;
           }
           else if (val_WIFI == 127) {
-       	   Serial.println(F(" OFF"));
+       	   message_out.println(F(" OFF"));
        	   Fake_WheelAmp = 0;
           }
           val_WIFI = 0;   // reset val2 to zero so the command is only executed once
-          Serial.println(F(" "));
+          message_out.println(F(" "));
           }
 
 // *** Arduino software reset ***
         // Mega_SW_restart
 	if (val_WIFI == 210)  {
-		Serial.println(F(""));
-		Serial.print(F("WIFI Command: "));
-		Serial.print(val_WIFI);
-		Serial.print(F("|Mega_SW_restart"));
+		message_out.println(F(""));
+		message_out.print(F("WIFI Command: "));
+		message_out.print(val_WIFI);
+		message_out.print(F("|Mega_SW_restart"));
 	  #if defined(WDT) and defined(BOARD_MEGA)
 		Mega_SW_restart_En = true;
 	  #endif // -(WDT)-
 		val_WIFI = 0;   // reset val2 to zero so the command is only executed once
-		Serial.println(F(" "));
+		message_out.println(F(" "));
 	}
 
     // TFT_SW_restart
 	if (val_WIFI == 211)  {
-		Serial.println(F(""));
-		Serial.print(F("WIFI Command: "));
-		Serial.print(val_WIFI);
-		Serial.print(F("|TFT_SW_restart"));
+		message_out.println(F(""));
+		message_out.print(F("WIFI Command: "));
+		message_out.print(val_WIFI);
+		message_out.print(F("|TFT_SW_restart"));
 
 		val_WIFI = 0;   // reset val2 to zero so the command is only executed once
-		Serial.println(F(" "));
+		message_out.println(F(" "));
 	}
 
 #endif // -(WEBSERVER)-
@@ -1485,14 +1485,14 @@ delay(30);
 // This ensures the MEGA is synced to the NodeMCU
  
  if (val_WIFI == 46)  {    
-   Serial.println(F(""));
-   Serial.println(F("Value "));
-   Serial.print(val_WIFI);
-   Serial.println(F(" received"));
+   message_out.println(F(""));
+   message_out.println(F("Value "));
+   message_out.print(val_WIFI);
+   message_out.println(F(" received"));
    
    // only go into the wait mode if the mower is parked or docked.
    if ( (Mower_Docked == 1) || (Mower_Parked == 1)) {   
-    Serial.println(F("Waiting..."));
+    message_out.println(F("Waiting..."));
     Menu_NodeMCU_Complete = false;
     
     while (Menu_NodeMCU_Complete == false) {                      
@@ -1502,9 +1502,9 @@ delay(30);
          delay(200);         
           // Receive_Data_From_NODEMCU();                  // Look for the transmission signal
           if (val_WIFI == 55)  {                        // If the signal arrived send the data
-            Serial.println(F(""));
-            Serial.println(F("Updating WIFI Buttons - Sync 1"));
-            Serial.println(F(""));
+            message_out.println(F(""));
+            message_out.println(F("Updating WIFI Buttons - Sync 1"));
+            message_out.println(F(""));
             Transmit_APP_Buttons_Status_1();              // Send the button status data
             Menu_NodeMCU_Complete = true;               // break the while loop
             }
@@ -1519,14 +1519,14 @@ delay(30);
 
 // Sync 2 Settings
  if (val_WIFI == 63)  {    
-   Serial.println(F(""));
-   Serial.println(F("Value "));
-   Serial.print(val_WIFI);
-   Serial.println(F(" received"));
+   message_out.println(F(""));
+   message_out.println(F("Value "));
+   message_out.print(val_WIFI);
+   message_out.println(F(" received"));
    
    // only go into the wait mode if the mower is parked or docked.
    if ( (Mower_Docked == 1) || (Mower_Parked == 1)) {   
-    Serial.println(F("Waiting..."));
+    message_out.println(F("Waiting..."));
     Menu_NodeMCU_Complete = false;
     
     while (Menu_NodeMCU_Complete == false) {                      
@@ -1536,9 +1536,9 @@ delay(30);
          delay(200);         
           // Receive_Data_From_NODEMCU();                  // Look for the transmission signal
           if (val_WIFI == 64)  {                        // If the signal arrived send the data
-            Serial.println(F(""));
-            Serial.println(F("Updating WIFI Buttons - Sync 2"));
-            Serial.println(F(""));
+            message_out.println(F(""));
+            message_out.println(F("Updating WIFI Buttons - Sync 2"));
+            message_out.println(F(""));
             Transmit_APP_Buttons_Status_2();              // Send the button status data
             Menu_NodeMCU_Complete = true;               // break the while loop
             }
@@ -1559,19 +1559,19 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
 // insert wheel motions here.
 
  if (val_WIFI == 16)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI Command: ")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("|Automatic Mode"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI Command: ")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("|Automatic Mode"));
    Manouver_Park_The_Mower(); 
    Turn_On_Relay(); 
    val_WIFI = 0;   // reset val2 to zero so the command is only executed once
   }
 
  if (val_WIFI == 17)  {    
-   Serial.print(F("WIFI")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|Wheel Forward"));
+   message_out.print(F("WIFI")); 
+   message_out.print(val_WIFI);
+   message_out.print(F("|Wheel Forward"));
    SetPins_ToGoForwards(); 
    bool Temp_Ramp_Motor_ON = Ramp_Motor_ON;                                              // Save Ramp_Motor status
    Ramp_Motor_ON = 0;                                                                    // Turn off ramp motor option to get fast response
@@ -1584,9 +1584,9 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
   }
 
  if (val_WIFI == 18)  {    
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|Wheel Reverse"));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);
+   message_out.print(F("|Wheel Reverse"));
    SetPins_ToGoBackwards(); 
    bool Temp_Ramp_Motor_ON = Ramp_Motor_ON;                                              // Save Ramp_Motor status
    Ramp_Motor_ON = 0;                                                                    // Turn off ramp motor option to get fast response
@@ -1599,9 +1599,9 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
   }
 
  if (val_WIFI == 19)  {    
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|Wheel Left"));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);
+   message_out.print(F("|Wheel Left"));
    SetPins_ToTurnLeft();
    bool Temp_Ramp_Motor_ON = Ramp_Motor_ON;                                              // Save Ramp_Motor status
    Ramp_Motor_ON = 0;                                                                    // Turn off ramp motor option to get fast response
@@ -1616,9 +1616,9 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
   }
 
  if (val_WIFI == 20)  {    
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|Wheel Right"));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);
+   message_out.print(F("|Wheel Right"));
    SetPins_ToTurnRight();
    bool Temp_Ramp_Motor_ON = Ramp_Motor_ON;                                              // Save Ramp_Motor status
    Ramp_Motor_ON = 0;                                                                    // Turn off ramp motor option to get fast response
@@ -1633,9 +1633,9 @@ void Execute_Manuel_Blynk_Command_To_Mower() {
 
 
 if (val_WIFI == 80) {
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|MECANUM Left Shift"));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);
+   message_out.print(F("|MECANUM Left Shift"));
    Mecanum_Side_Movement_Left();
    bool Temp_Ramp_Motor_ON = Ramp_Motor_ON;                                              // Save Ramp_Motor status
    Ramp_Motor_ON = 0;                                                                    // Turn off ramp motor option to get fast response
@@ -1649,9 +1649,9 @@ if (val_WIFI == 80) {
 }
 
 if (val_WIFI == 81) {
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|MECANUM Right Shift"));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);
+   message_out.print(F("|MECANUM Right Shift"));
    Mecanum_Side_Movement_Right();
    bool Temp_Ramp_Motor_ON = Ramp_Motor_ON;                                              // Save Ramp_Motor status
    Ramp_Motor_ON = 0;                                                                    // Turn off ramp motor option to get fast response
@@ -1666,9 +1666,9 @@ if (val_WIFI == 81) {
 
 
 if (val_WIFI == 82) {
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|MECANUM Left Diagonal"));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);
+   message_out.print(F("|MECANUM Left Diagonal"));
    Mecanum_Diagonal_Movement_Left();
    bool Temp_Ramp_Motor_ON = Ramp_Motor_ON;                                              // Save Ramp_Motor status
    Ramp_Motor_ON = 0;                                                                    // Turn off ramp motor option to get fast response
@@ -1682,9 +1682,9 @@ if (val_WIFI == 82) {
 }
 
 if (val_WIFI == 83) {
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.print(F("|MECANUM Right Diagonal"));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);
+   message_out.print(F("|MECANUM Right Diagonal"));
    Mecanum_Diagonal_Movement_Right();
    bool Temp_Ramp_Motor_ON = Ramp_Motor_ON;                                              // Save Ramp_Motor status
    Ramp_Motor_ON = 0;                                                                    // Turn off ramp motor option to get fast response
@@ -1699,11 +1699,11 @@ if (val_WIFI == 83) {
 
 
  if (val_WIFI == 56)  {    
-   Serial.println(F(""));
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);
-   Serial.println(F("Dock in this direction"));
-   Serial.println(F(""));
+   message_out.println(F(""));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);
+   message_out.println(F("Dock in this direction"));
+   message_out.println(F(""));
 
    bool Keep_Compass_Value = 0;
    if (Compass_Activate == 1) {
@@ -1723,11 +1723,11 @@ if (val_WIFI == 83) {
 
 // Test Drill Cycle
  if (val_WIFI == 75) {
-   Serial.println(F(""));
-   Serial.print(F("WIFI:")); 
-   Serial.print(val_WIFI);    
-   Serial.println(F(""));
-   Serial.println(F("WIFI Drill Cycle"));
+   message_out.println(F(""));
+   message_out.print(F("WIFI:")); 
+   message_out.print(val_WIFI);    
+   message_out.println(F(""));
+   message_out.println(F("WIFI Drill Cycle"));
    Initiate_Drill_Cycle();
    }  
 

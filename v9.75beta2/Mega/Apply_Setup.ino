@@ -9,13 +9,13 @@ void Print_Mower_Status() {
 	
 	if (Mower_PIXHAWK == 0) {
 		
-		//Serial.print("Mower Stat....");
-		if (Mower_Docked == 1) Serial.print(F("Docked:1|"));
-		if (Mower_Parked == 1) Serial.print(F("Parked:1|"));
-		if (Mower_Running == 1) Serial.print(F("Running:1|"));
-		if (Manuel_Mode == 1) Serial.print(F("Manuel Mode:1|"));
-		if (Mower_Parked_Low_Batt == 1) Serial.print(F("Park_Low_Batt:1|"));
-		if (Mower_Error == 1) Serial.print(F("Mower Error:1|"));
+		//message_out.print("Mower Stat....");
+		if (Mower_Docked == 1) message_out.print(F("Docked:1|"));
+		if (Mower_Parked == 1) message_out.print(F("Parked:1|"));
+		if (Mower_Running == 1) message_out.print(F("Running:1|"));
+		if (Manuel_Mode == 1) message_out.print(F("Manuel Mode:1|"));
+		if (Mower_Parked_Low_Batt == 1) message_out.print(F("Park_Low_Batt:1|"));
+		if (Mower_Error == 1) message_out.print(F("Mower Error:1|"));
 		
 	}
 	
@@ -65,12 +65,12 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
 		
         //HMC5883 Compass
         while ((!compass.begin()) && (Compass_Attempt <= 5)){
-            Serial.println(F("No HMC or QMC5883 sensor found, check wiring!"));
+            message_out.println(F("No HMC or QMC5883 sensor found, check wiring!"));
             delay(500);
             Compass_Attempt = Compass_Attempt + 1;
 		}
 		if (compass.isHMC()) {
-			Serial.println(F("Initialize DF Robot HMC5883 Compass"));
+			message_out.println(F("Initialize DF Robot HMC5883 Compass"));
 			Compass_Detected = 1;                        // HMC5883
 			
 			#if defined(LCD_KEYPAD)
@@ -88,7 +88,7 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
 		
 		//QMC5883 Compass
 		else if (compass.isQMC()) {
-			Serial.println(F("Initialising DF Robot QMC5883 Compass"));
+			message_out.println(F("Initialising DF Robot QMC5883 Compass"));
 			Compass_Detected = 2;                        // HMC5883
 			
 			#if defined(LCD_KEYPAD)
@@ -106,9 +106,9 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
 		
 		// Escape the loop if no compass is found but compass is activated in the settings
 		if ((Compass_Attempt > 5) && (Compass_Found == 0)) {
-			Serial.println("No Valid Compass Found");
+			message_out.println("No Valid Compass Found");
 			Compass_Activate = 0;
-			Serial.println("Compass Deactivated");
+			message_out.println("Compass Deactivated");
 			delay(3000);
 		}
 		
@@ -125,7 +125,7 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
 	
 	
 	if (Compass_Activate == 0) {
-		Serial.println(F("Compass Switched off - Select 1 in setup to switch on.")); 
+		message_out.println(F("Compass Switched off - Select 1 in setup to switch on.")); 
 	}
 	
 }
@@ -134,7 +134,7 @@ void Setup_DFRobot_QMC5883_HMC5883L_Compass() {
 void Setup_Gyro() {
 	
 	if (GYRO_Enabled == 1) {
-        Serial.println("GYRO GY-521 Activated");
+        message_out.println("GYRO GY-521 Activated");
         Wire.begin();
         Wire.beginTransmission(MPU_addr);
         Wire.write(0x6B);
@@ -145,7 +145,7 @@ void Setup_Gyro() {
 
 
 void Setup_Relays() {
-	Serial.println(F("Setup Relays"));
+	message_out.println(F("Setup Relays"));
 	pinMode(Relay_Motors, OUTPUT);
 	delay(5);
 	Turn_Off_Relay();
@@ -153,11 +153,11 @@ void Setup_Relays() {
 }
 
 void Setup_Motor_Pins() {
-	Serial.println(F(""));
-	Serial.print(F("Setup Motor Pins:"));
+	message_out.println(F(""));
+	message_out.print(F("Setup Motor Pins:"));
 	
 	#if defined(ROBOT_MOWER)
-		Serial.println(F("Mower:"));
+		message_out.println(F("Mower:"));
 		pinMode(L_EN, OUTPUT);
 		pinMode(R_EN, OUTPUT);
 		pinMode(RPWM, OUTPUT);
@@ -210,20 +210,20 @@ void Setup_Motor_Pins() {
 
 
 void  Turn_On_Relay() {
-	Serial.print(F("Relay:ON|"));
+	message_out.print(F("Relay:ON|"));
 	if (PCB == 0) digitalWrite(Relay_Motors, LOW);                         // Turn on the relay for the 12V main battery power
 	if (PCB == 1) digitalWrite(Relay_Motors, HIGH); 
 }
 
 void  Turn_Off_Relay() {
-	Serial.print(F("Relay:Off|"));
+	message_out.print(F("Relay:Off|"));
 	if (PCB == 0) (digitalWrite(Relay_Motors, HIGH));                      // Turn off the relay for the 12V main battery power
 	if (PCB == 1) (digitalWrite(Relay_Motors, LOW));    
 }
 
 void Setup_Membrane_Buttons() {
 	#if defined(LCD_KEYPAD)
-		Serial.println(F("Setup Membrane Keys"));
+		message_out.println(F("Setup Membrane Keys"));
 		pinMode(Start_Key, INPUT_PULLUP);            // set pin as input
 		pinMode(Plus_Key, INPUT_PULLUP);            // set pin as input
 		pinMode(Minus_Key, INPUT_PULLUP);            // set pin as input
@@ -234,18 +234,18 @@ void Setup_Membrane_Buttons() {
 
 
 void Setup_Microswitches() {
-	Serial.println(F("Setup Microswitches"));
+	message_out.println(F("Setup Microswitches"));
 	pinMode(Microswitch_1, INPUT_PULLUP); 
 	pinMode(Microswitch_2, INPUT_PULLUP); 
 }
 
 void Setup_ADCMan() {
-	Serial.println(F("Setting up ADCMAN"));
+	message_out.println(F("Setting up ADCMAN"));
 	
 	if (Perimeter_Wire_Enabled == 1) {
 		// Wire Sensor
-		Serial.println(F("Setting up Wire Sensor"));
-		Serial.println(F(""));
+		message_out.println(F("Setting up Wire Sensor"));
+		message_out.println(F(""));
 		ADCMan.init();
 		ADCMan.setCapture(pinPerimeterLeft, 1, 0);
 		perimeter.setPins(pinPerimeterLeft, pinPerimeterRight);
@@ -255,7 +255,7 @@ void Setup_ADCMan() {
 	
 	if ((GPS_Enabled == 1) && (GPS_Type == 2)) {
 		// GPS Fence Sensor 
-		Serial.println(F("Setting up PIXHAWK PWM Signals"));
+		message_out.println(F("Setting up PIXHAWK PWM Signals"));
 		ADCMan.init(); 											// JDP should be in each if loop or moved out of if loops and just started at begining of void Setup_ADCMan before ifs
 		pinMode(PIXHAWK_LH_PWM, INPUT);
 		pinMode(PIXHAWK_RH_PWM, INPUT);		
@@ -264,7 +264,7 @@ void Setup_ADCMan() {
 	//**********************added by JDP ************************************************************
 	if (Use_MEGA_for_Analog_reads == 1) {									// JDP
 		// Use Mega for all Analog sensors									// JDP
-		Serial.println(F("Setting up Bat A, Bat V, Rain, Wheel Sensor"));	// JDP
+		message_out.println(F("Setting up Bat A, Bat V, Rain, Wheel Sensor"));	// JDP
 		ADCMan.init(); 														// JDP should be in each if loop or moved out of if loops and just sta
 		pinMode(Battery_Amps, INPUT);										// JDP
 		pinMode(Battery_Volts, INPUT);										// JDP
@@ -306,9 +306,9 @@ void Setup_Check_Pattern_Mow() {
 	
 	void Setup_PIXHAWK() {
 	
-	Serial.println(F("PIXHAWK SETUP..."));
+	message_out.println(F("PIXHAWK SETUP..."));
 	Pixhawk_Serial.begin(57600);
-	Serial.println("MAVLink starting.");  
+	message_out.println("MAVLink starting.");  
 	Check_PIXHAWK();         // Check PIXHAWK Packages
 	Command_long_Disarm();   // Disarm Pixhawk
 	

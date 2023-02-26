@@ -1,7 +1,7 @@
 
 void Spikes_Up()     {                                              // Spikes Motor Bridge p      
       #if defined(ROBOT_AERATOR)
-      Serial.print(F("Spike:UP|"));
+      message_out.print(F("Spike:UP|"));
       digitalWrite(IN9Pin, LOW);                                      // Motor Birdge pins are set to high or low to set the direction of movement
       digitalWrite(IN10Pin, HIGH);
       analogWrite (ENEPin,  200);
@@ -12,7 +12,7 @@ void Spikes_Up()     {                                              // Spikes Mo
 
 void Spikes_Down()     {                                            // Spike Motor Bridge pins 
       #if defined(ROBOT_AERATOR)
-      Serial.print(F("Spike:DOWN|"));
+      message_out.print(F("Spike:DOWN|"));
       digitalWrite(IN9Pin, HIGH);                                      // Motor Birdge pins are set to high or low to set the direction of movement
       digitalWrite(IN10Pin, LOW);
       analogWrite (ENEPin,  200); 
@@ -38,7 +38,7 @@ void Motor_Action_Spin_Drill()  {
         delay(20);
         analogWrite(RPWM, PWM_Blade_Speed);
         delay(20);
-        Serial.print(F("Drill:ON_|"));   
+        message_out.print(F("Drill:ON_|"));   
         }
 
 
@@ -49,15 +49,15 @@ void Motor_Action_Stop_Drill()  {
   digitalWrite(R_EN, LOW);
   digitalWrite(L_EN, LOW);
   delay(20);
-  Serial.print(F("Drill:0FF|"));
+  message_out.print(F("Drill:0FF|"));
   }
 
 
 
 
 void Initiate_Drill_Cycle() {
-    Serial.println(F(""));
-    Serial.println(F("Starting Drill Cycle"));
+    message_out.println(F(""));
+    message_out.println(F("Starting Drill Cycle"));
     Setup_Microswitches();
     Read_Serial1_Nano(); 
     
@@ -80,8 +80,8 @@ void Initiate_Drill_Cycle() {
       Spikes_Down();      
       Check_End_Stops();
       cycles ++;
-      Serial.print("Cycles:");
-      Serial.println(cycles);
+      message_out.print("Cycles:");
+      message_out.println(cycles);
       Check_Serial_Input();
       if (Command == 32) Stop = 1;     
       delay(200);
@@ -113,8 +113,8 @@ void Initiate_Drill_Cycle() {
         Motor_Action_Stop_Drill();    // Stop the drill motor to save amps and prevent heating
         Drill_ON = 0;
         }
-      Serial.print("Cycles:");
-      Serial.println(cycles);
+      message_out.print("Cycles:");
+      message_out.println(cycles);
       Check_Serial_Input();
       if (Command == 32) Stop = 1;
       delay(200);
@@ -146,12 +146,12 @@ void Check_End_Stops() {
   if (!digitalRead(Microswitch_2))  End_Stop_Lower = true;     // The switch is activated the variable Bump is true
   
   if (End_Stop_Lower == true )   {
-    Serial.println(F(""));
-    Serial.println(F("Lower End Stop Activated"));
+    message_out.println(F(""));
+    message_out.println(F("Lower End Stop Activated"));
     }
   if (End_Stop_Upper == true )   {
-    Serial.println(F(""));
-    Serial.println(F("Top End Stop Activated"));
+    message_out.println(F(""));
+    message_out.println(F("Top End Stop Activated"));
     }
   }
 
@@ -166,9 +166,9 @@ void Calculate_Drill_Amps() {
  DrillAmps =  ((VoltageAmp - ACSoffset) / mVperAmp);
  if (DrillAmps < 0) DrillAmps = DrillAmps * - 1;
  if (DrillAmps > 10) DrillAmps = 0;
- Serial.print(("WA:"));
- Serial.print(DrillAmps);
- Serial.print(F("|"));
+ message_out.print(("WA:"));
+ message_out.print(DrillAmps);
+ message_out.print(F("|"));
 
  }
 
@@ -176,13 +176,13 @@ void Calculate_Drill_Amps() {
 void Check_Drill_Amps() {
   Calculate_Drill_Amps();
   if (Drill_Amp_Sensor_ON == 1) {
-           Serial.print(F("D_Amps:"));
-           Serial.print(DrillAmps);
-           Serial.print(F("|Max_D_Amps:"));
-           Serial.print(Max_Drill_Amps);   
-           Serial.print(F("|Drill_Block:"));
-           Serial.print(Drill_Blocked_Count);
-           Serial.print(F("|"));
+           message_out.print(F("D_Amps:"));
+           message_out.print(DrillAmps);
+           message_out.print(F("|Max_D_Amps:"));
+           message_out.print(Max_Drill_Amps);   
+           message_out.print(F("|Drill_Block:"));
+           message_out.print(Drill_Blocked_Count);
+           message_out.print(F("|"));
       
         if (DrillAmps >= Max_Drill_Amps) Drill_Blocked_Count = Drill_Blocked_Count + 1;            
         else {
@@ -191,8 +191,8 @@ void Check_Drill_Amps() {
           }
           
         if (Drill_Blocked_Count > Drill_Blocked_Count_Max) {                     
-                Serial.println(F("!! Drill_Blocked !!"));
-                Serial.print(F("|")); 
+                message_out.println(F("!! Drill_Blocked !!"));
+                message_out.print(F("|")); 
                 Drill_Blocked = 4;                
                 }
            }
@@ -204,7 +204,7 @@ void Check_Drill_Amps() {
 
 void Ensure_Drills_Are_Restarcted() {
       
-      Serial.println(F("Ensuring Drills are Retracted"));
+      message_out.println(F("Ensuring Drills are Retracted"));
       Drill_Status = 2;
       Send_Aerator_Running_Data();
       Check_End_Stops();

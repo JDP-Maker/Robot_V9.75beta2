@@ -7,9 +7,9 @@ void Special_Cut_Under_Trampoline_Function() {
 // after wire tracking the code to bering the mower to a sensible position away from the wire
 // This poart of the code should eb modified to fit your garden needs
 void Special_Move_Into_Garden_Zone_X() {
-    Serial.println(F(""));
-    Serial.println(F("Arrived at Exit Zone"));
-    Serial.println(F("Moving into Garden"));
+    message_out.println(F(""));
+    message_out.println(F("Arrived at Exit Zone"));
+    message_out.println(F("Moving into Garden"));
     Motor_Action_Stop_Motors();                                     // Stop the wheel motors
     if (CCW_Tracking_To_Start == 1) SetPins_ToTurnLeft();           // Turn left
     if (CW_Tracking_To_Start == 1) SetPins_ToTurnRight();           // Turn Right    
@@ -25,15 +25,15 @@ void Manouver_Exit_From_Docking_Station(){
     lcd.print(F("Exiting Garage"));
     #endif
 
-    Serial.println(F("Exiting Docking Garage"));
+    message_out.println(F("Exiting Docking Garage"));
     delay(2000);
     SetPins_ToGoBackwards();                                        // Prepare motors pins to go Backwards
     Motor_Action_GoFullSpeed_Out_Garage();                          // Turn the wheels
-    Serial.print(F("Left Wheel PWM:"));
-    Serial.print(PWM_MaxSpeed_LH);
-    Serial.print("|");
-    Serial.print(F("Right Wheel PWM:"));
-    Serial.println(PWM_MaxSpeed_RH);   
+    message_out.print(F("Left Wheel PWM:"));
+    message_out.print(PWM_MaxSpeed_LH);
+    message_out.print("|");
+    message_out.print(F("Right Wheel PWM:"));
+    message_out.println(PWM_MaxSpeed_RH);   
     delay (4000);                                             // Backwards time
     Motor_Action_Stop_Motors();                                       // Stop
 
@@ -67,18 +67,18 @@ void Manouver_Exit_From_Docking_Station(){
     Motor_Action_Stop_Motors();                                     // Stop / Park the mower here
 
     if ((GPS_Enabled == true) && (GPS_Type == 2) && (Run_PIXHAWK_Mission_At_Exit == true)) {
-      Serial.println("");
-      Serial.println(F("Mower set to PIXHAWK Mode"));
-      Serial.println("");
+      message_out.println("");
+      message_out.println(F("Mower set to PIXHAWK Mode"));
+      message_out.println("");
       Mower_Docked = 0;
       Mower_PIXHAWK = 1;
-      Serial.println("");
-      Serial.println("ARMED");
-      Serial.println("");
+      message_out.println("");
+      message_out.println("ARMED");
+      message_out.println("");
       Command_long_ARM();
-      Serial.println("");
-      Serial.println("AUTO MODE");
-      Serial.println("");
+      message_out.println("");
+      message_out.println("AUTO MODE");
+      message_out.println("");
       Auto_Mode();
       }
 
@@ -95,8 +95,8 @@ void Manouver_Exit_From_Docking_Station(){
 
 void Specials_Find_Wire_Track()  {
 
-  Serial.println(F(""));
-  Serial.println(F("Lost Mower - find wire Track"));
+  message_out.println(F(""));
+  message_out.println(F("Lost Mower - find wire Track"));
   
   #if defined(LCD_KEYPAD)
   lcd.clear();
@@ -114,8 +114,8 @@ void Specials_Find_Wire_Track()  {
   Running_Test_for_Boundary_Wire();                                                                   // Check to see that the wire is on.
 
   for (int i = 0; i <= 1; i++) {
-    Serial.print(F("Position Try = "));
-    Serial.println(i);
+    message_out.print(F("Position Try = "));
+    message_out.println(i);
     ADCMan.run();
     UpdateWireSensor();
     delay(20);
@@ -128,7 +128,7 @@ void Specials_Find_Wire_Track()  {
 
     // First go backwards if the mower is outside the wire
     if ( inside == false) {                                    // If the mower is outside the wire then run the following code.
-      Serial.println("Reversing to find the wire");
+      message_out.println("Reversing to find the wire");
       ADCMan.run();
       UpdateWireSensor();
       PrintBoundaryWireStatus();
@@ -153,11 +153,11 @@ void Specials_Find_Wire_Track()  {
         UpdateWireSensor();                                                                 // Read the wire sensor and see of the mower is now  or outside the wire
         ADCMan.run();
         PrintBoundaryWireStatus();                                                          // Prints of the status of the wire sensor readings.
-        Serial.println(F(""));
+        message_out.println(F(""));
         Wire_Find_Attempt = Wire_Find_Attempt + 1;                                                      // Counts how many loops have passed to find the wire.
-        Serial.print(F("No Wire Count Backwards:"));
-        Serial.print(Wire_Find_Attempt);
-        Serial.print("|");
+        message_out.print(F("No Wire Count Backwards:"));
+        message_out.print(Wire_Find_Attempt);
+        message_out.print("|");
         }
       
       }
@@ -171,10 +171,10 @@ void Specials_Find_Wire_Track()  {
     Wire_Find_Attempt = 0; 
     // Code to go forwards until the mower is outside/ON the wire
     if ( inside == true) {             // If the Mower is situated  the wire then run the following code.
-        Serial.println(F("Moving Forwards to find the wire"));
+        message_out.println(F("Moving Forwards to find the wire"));
         ADCMan.run();
         UpdateWireSensor();
-        Serial.println(F("CODE POSITION - MOTOR FORWARDS LOOP:  If statements"));
+        message_out.println(F("CODE POSITION - MOTOR FORWARDS LOOP:  If statements"));
         PrintBoundaryWireStatus();
         Motor_Action_Stop_Motors();
         Loop_Cycle_Mowing = 999;
@@ -197,11 +197,11 @@ void Specials_Find_Wire_Track()  {
           UpdateWireSensor();                                                               // Read the wire sensor and see of the mower is now  or outside the wire
           ADCMan.run();
           PrintBoundaryWireStatus();                                                        // Prints of the status of the wire sensor readings.
-          Serial.println(F(""));
+          message_out.println(F(""));
           Wire_Find_Attempt = Wire_Find_Attempt + 1;                                                    // Counts how many loops have passed to find the wire.
-          Serial.print("No Wire Count Forwards:");
-          Serial.print(Wire_Find_Attempt);
-          Serial.print("|");
+          message_out.print("No Wire Count Forwards:");
+          message_out.print(Wire_Find_Attempt);
+          message_out.print("|");
           }
       }
       Motor_Action_Stop_Motors();

@@ -7,7 +7,7 @@
 
 void Setup_Run_LCD_Intro () {
   #if defined(LCD_KEYPAD)
-  Serial.println(F("Setup LCD"));
+  message_out.println(F("Setup LCD"));
   lcd.begin(16, 2);
   lcd.clear();
   lcd.print(F("ReP_AL Robot"));
@@ -19,7 +19,7 @@ void Setup_Run_LCD_Intro () {
     }
   delay(1000);
   lcd.clear();
-  Serial.println(F("LCD Setup OK"));
+  message_out.println(F("LCD Setup OK"));
   #endif
   }
 

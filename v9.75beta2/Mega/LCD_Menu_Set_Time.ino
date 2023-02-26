@@ -19,8 +19,8 @@ void Print_Membrane_Switch_Input_Alarms() {
      Menu_Mode_Selection = 0;
      Menu_View = 0;
 
-      Serial.println();
-      Serial.println(F("Alarms Menu Activated"));
+      message_out.println();
+      message_out.println(F("Alarms Menu Activated"));
       Menu_Complete_Alarms = false;                                // Menu complete will return to the normal loop
       lcd.clear();
       delay(5);
@@ -38,12 +38,12 @@ void Print_Membrane_Switch_Input_Alarms() {
              
         if(!Start_Key_X){
           Menu_Complete_Alarms = true;
-          Serial.println(F("Start key is pressed"));
+          message_out.println(F("Start key is pressed"));
           Activate_Menu_Option_Alarms();
           lcd.clear();         
           }
         if(!Plus_Key_X) {
-          Serial.println(F("+ key is pressed"));
+          message_out.println(F("+ key is pressed"));
           Menu_View = Menu_View - 1;
           Run_Menu_Order_Alarms();
           }
@@ -52,7 +52,7 @@ void Print_Membrane_Switch_Input_Alarms() {
           Run_Menu_Order_Alarms();
         }
         if(!Stop_Key_X){
-          Serial.println(F("Stop key is pressed"));
+          message_out.println(F("Stop key is pressed"));
           Menu_Complete_Alarms = true;
           lcd.clear();
           lcd.setCursor(0,0);
@@ -70,7 +70,7 @@ void Print_Membrane_Switch_Input_Alarms() {
  void Run_Menu_Order_Alarms() {
      if (Menu_View > Max_Options_Alarms) Menu_View = Menu_View -1;
      if (Menu_View < 0) Menu_View = Menu_View + 1;      
-     Serial.print(F("- key is pressed "));
+     message_out.print(F("- key is pressed "));
      lcd.clear();
      lcd.setCursor(1,0);
      Print_LCD_Menu_Alarms(Menu_View);
@@ -79,10 +79,10 @@ void Print_Membrane_Switch_Input_Alarms() {
      lcd.setCursor(0,0);
      lcd.print(">");
      Menu_Mode_Selection = Menu_View;
-     Serial.print(F("Menu View : "));
-     Serial.print(Menu_View);
-     Serial.print(F("| Menu Selection"));
-     Serial.println(Menu_Mode_Selection);
+     message_out.print(F("Menu View : "));
+     message_out.print(Menu_View);
+     message_out.print(F("| Menu Selection"));
+     message_out.println(Menu_Mode_Selection);
      delay(100);
      }
 
@@ -806,11 +806,11 @@ if (Menu_Mode_Selection == 4) {
        lcd.print(F(":"));
        if (set_min < 10) lcd.print ("0");
        lcd.print(set_min);
-       Serial.print(F("Time : "));
-       Serial.print(set_hour);
-       Serial.print(F(":"));
-       if (set_min < 10) Serial.print ("0");
-       Serial.println(set_min);
+       message_out.print(F("Time : "));
+       message_out.print(set_hour);
+       message_out.print(F(":"));
+       if (set_min < 10) message_out.print ("0");
+       message_out.println(set_min);
 
        Menu_Complete_Alarms = false;
        delay(500);
@@ -819,7 +819,7 @@ if (Menu_Mode_Selection == 4) {
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
                if(!Start_Key_X){
-               Serial.println(F("Settings Saved"));
+               message_out.println(F("Settings Saved"));
                Menu_Complete_Alarms = true;
                lcd.clear();
                lcd.print(F("Time : "));
@@ -832,11 +832,11 @@ if (Menu_Mode_Selection == 4) {
        if (PCB == 0) {           
           rtc.writeProtect(false);
           rtc.halt(false);
-          Serial.print(F("Clock : "));
-          Serial.print(set_hour);
-          Serial.print(":");
-          if (set_min < 10) Serial.print("0");
-          Serial.println(set_min);
+          message_out.print(F("Clock : "));
+          message_out.print(set_hour);
+          message_out.print(":");
+          if (set_min < 10) message_out.print("0");
+          message_out.println(set_min);
           Time t(2019, 07, 19, set_hour, set_min, 00, Time::kFriday);            // Year XXXX, Month XX, Day XX, Hour XX, Minute XX, Second, kXYZday
           rtc.time(t);    
           delay(200);
@@ -847,7 +847,7 @@ if (Menu_Mode_Selection == 4) {
 
       if (PCB == 1) {
           Set_DS3231_Time(00,set_min, set_hour, 2,14,7,20);    //second, minute, hour, dayof week, day of month, month, year
-          Serial.println(F("TIME SAVED"));
+          message_out.println(F("TIME SAVED"));
           delay(2000);
           }
                
@@ -885,7 +885,7 @@ if (Menu_Mode_Selection == 4) {
                lcd.print(set_min);
                 }
              if(!Stop_Key_X){
-               Serial.println(F("Time Set Cancelled"));
+               message_out.println(F("Time Set Cancelled"));
                Menu_Complete_Alarms = true;
                lcd.clear();
                lcd.setCursor(0,0);
@@ -897,7 +897,7 @@ if (Menu_Mode_Selection == 4) {
                Menu_Mode_Selection = 0;
                }
              }
-       Serial.print(F("Time : "));
+       message_out.print(F("Time : "));
        delay(1000);
        }
 

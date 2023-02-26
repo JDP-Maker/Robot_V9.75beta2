@@ -24,8 +24,8 @@ void Print_Membrane_Switch_Input_NAVI() {
      Menu_Mode_Selection = 0;
      Menu_View = 0;
 
-      Serial.println();
-      Serial.println(F("NAVI Menu Activated"));
+      message_out.println();
+      message_out.println(F("NAVI Menu Activated"));
       Menu_Complete_NAVI = false;                                // Menu complete will return to the normal loop
       lcd.clear();
       delay(5);
@@ -43,13 +43,13 @@ void Print_Membrane_Switch_Input_NAVI() {
              
         if(!Start_Key_X){
           Menu_Complete_NAVI = true;
-          Serial.println(F("Start key is pressed"));
+          message_out.println(F("Start key is pressed"));
           Activate_Menu_Option_NAVI();
           lcd.clear();
           
           }
         if(!Plus_Key_X) {
-          Serial.println(F("+ key is pressed"));
+          message_out.println(F("+ key is pressed"));
           Menu_View = Menu_View - 1;
           Run_Menu_Order_NAVI();
           }
@@ -58,7 +58,7 @@ void Print_Membrane_Switch_Input_NAVI() {
           Run_Menu_Order_NAVI();
         }
         if(!Stop_Key_X){
-          Serial.println(F("Stop key is pressed"));
+          message_out.println(F("Stop key is pressed"));
           Menu_Complete_NAVI = true;
           lcd.clear();
           lcd.setCursor(0,0);
@@ -77,7 +77,7 @@ void Print_Membrane_Switch_Input_NAVI() {
  void Run_Menu_Order_NAVI() {
      if (Menu_View > Max_Options_NAVI) Menu_View = Menu_View -1;
      if (Menu_View < 0) Menu_View = Menu_View + 1;      
-     Serial.print(F("- key is pressed "));
+     message_out.print(F("- key is pressed "));
      lcd.clear();
      lcd.setCursor(1,0);
      Print_LCD_Menu_NAVI(Menu_View);
@@ -86,10 +86,10 @@ void Print_Membrane_Switch_Input_NAVI() {
      lcd.setCursor(0,0);
      lcd.print(">");
      Menu_Mode_Selection = Menu_View;
-     Serial.print(F("Menu View : "));
-     Serial.print(Menu_View);
-     Serial.print(F("| Menu Selection"));
-     Serial.println(Menu_Mode_Selection);
+     message_out.print(F("Menu View : "));
+     message_out.print(Menu_View);
+     message_out.print(F("| Menu Selection"));
+     message_out.println(Menu_Mode_Selection);
      delay(100);
      }
 
@@ -119,13 +119,13 @@ void Activate_Menu_Option_NAVI() {
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
-               Serial.println(F("Compass Settings Saved"));
+               message_out.println(F("Compass Settings Saved"));
                Menu_Complete_NAVI = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("Compass Saved"));
-               Serial.print(F("Compass:"));
-               Serial.println(Compass_Activate);
+               message_out.print(F("Compass:"));
+               message_out.println(Compass_Activate);
                delay(2000);
                lcd.clear();          
                EEPROM.write(19 , 1);
@@ -142,8 +142,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.print(F("Status : "));
                Compass_Activate = 1;
                lcd.print(F("ON "));
-               Serial.print(F("Compass:"));
-               Serial.println(Compass_Activate);
+               message_out.print(F("Compass:"));
+               message_out.println(Compass_Activate);
                delay(100);
                }
              if (!Minus_Key_X) {
@@ -151,8 +151,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.print(F("Status : "));
                Compass_Activate = 0;
                lcd.print(F("OFF"));
-               Serial.print(F("Compass:"));
-               Serial.println(Compass_Activate);
+               message_out.print(F("Compass:"));
+               message_out.println(Compass_Activate);
                delay(100);
                }
      }
@@ -168,15 +168,15 @@ void Activate_Menu_Option_NAVI() {
        lcd.print(F("Compass Home Degrees:"));
        lcd.setCursor(0,1);
        lcd.print(Home_Wire_Compass_Heading);
-       Serial.print(F("Compass Home Degrees:"));
-       Serial.println(Home_Wire_Compass_Heading);
+       message_out.print(F("Compass Home Degrees:"));
+       message_out.println(Home_Wire_Compass_Heading);
        Menu_Complete_NAVI = false;
        while (Menu_Complete_NAVI == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
-             Serial.println(F("Settings Saved"));
+             message_out.println(F("Settings Saved"));
              Menu_Complete_NAVI = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -197,8 +197,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.print("      ");    // Fully clear the number to stop reminants of a previous number from being left behind
                lcd.setCursor(0,1);
                lcd.print(Home_Wire_Compass_Heading);
-               Serial.print(F("Compass Home Degrees:"));
-               Serial.println(Home_Wire_Compass_Heading);
+               message_out.print(F("Compass Home Degrees:"));
+               message_out.println(Home_Wire_Compass_Heading);
                }
              if (!Minus_Key_X) {
                Home_Wire_Compass_Heading = Home_Wire_Compass_Heading - 10;
@@ -207,8 +207,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.print("      ");   // Fully clear the number to stop reminants of a previous number from being left behind
                lcd.setCursor(0,1);
                lcd.print(Home_Wire_Compass_Heading);
-               Serial.print(F("Compass Home Degrees : "));
-               Serial.println(Home_Wire_Compass_Heading);
+               message_out.print(F("Compass Home Degrees : "));
+               message_out.println(Home_Wire_Compass_Heading);
                }
              
              }
@@ -237,13 +237,13 @@ void Activate_Menu_Option_NAVI() {
           delay(100);
           //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
-               Serial.println(F("Heading Hold Settings Saved"));
+               message_out.println(F("Heading Hold Settings Saved"));
                Menu_Complete_NAVI = true;
                lcd.clear();
                lcd.setCursor(0,0);
                lcd.print(F("H-Hold Saved"));
-               Serial.print(F("Heading Hold:"));
-               Serial.println(Compass_Heading_Hold_Enabled);
+               message_out.print(F("Heading Hold:"));
+               message_out.println(Compass_Heading_Hold_Enabled);
                delay(2000);
                lcd.clear();          
                EEPROM.write(59 , 1);
@@ -256,8 +256,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.print(F("Status : "));
                Compass_Heading_Hold_Enabled = 1;
                lcd.print(F("ON "));
-               Serial.print(F("H-Hold:"));
-               Serial.println(Compass_Heading_Hold_Enabled);
+               message_out.print(F("H-Hold:"));
+               message_out.println(Compass_Heading_Hold_Enabled);
                delay(100);
                }
              if (!Minus_Key_X) {
@@ -265,8 +265,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.print(F("Status : "));
                Compass_Heading_Hold_Enabled = 0;
                lcd.print(F("OFF"));
-               Serial.print(F("H-Hold:"));
-               Serial.println(Compass_Heading_Hold_Enabled);
+               message_out.print(F("H-Hold:"));
+               message_out.println(Compass_Heading_Hold_Enabled);
                delay(100);
                }
      }
@@ -284,15 +284,15 @@ void Activate_Menu_Option_NAVI() {
        lcd.setCursor(0,1);
        lcd.print(F("P = "));
        lcd.print(CPower);
-       Serial.print(F("Compass PID P = :"));
-       Serial.println(CPower);
+       message_out.print(F("Compass PID P = :"));
+       message_out.println(CPower);
        Menu_Complete_NAVI = false;
        while (Menu_Complete_NAVI == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
-             Serial.println(F("Settings Saved"));
+             message_out.println(F("Settings Saved"));
              Menu_Complete_NAVI = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -314,8 +314,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.setCursor(0,1);
                lcd.print(F("P = "));
                lcd.print(CPower);
-               Serial.print(F("Compass PID P = :"));
-               Serial.println(CPower);
+               message_out.print(F("Compass PID P = :"));
+               message_out.println(CPower);
                }
              if (!Minus_Key_X) {
                CPower = CPower - 0.01;
@@ -325,8 +325,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.setCursor(0,1);
                lcd.print(F("P = "));
                lcd.print(CPower);
-               Serial.print(F("Compass PID P = :"));
-               Serial.println(CPower);
+               message_out.print(F("Compass PID P = :"));
+               message_out.println(CPower);
                }
              
              }
@@ -353,13 +353,13 @@ void Activate_Menu_Option_NAVI() {
             delay(100);
             //Enter Code Here to Cycle until stop key is pressed.
                if(!Start_Key_X){
-                 Serial.println(F("Gyro Settings Saved"));
+                 message_out.println(F("Gyro Settings Saved"));
                  Menu_Complete_NAVI = true;
                  lcd.clear();
                  lcd.setCursor(0,0);
                  lcd.print(F("Gyro Saved"));
-                 Serial.print(F("Gyro:"));
-                 Serial.println(GYRO_Enabled);
+                 message_out.print(F("Gyro:"));
+                 message_out.println(GYRO_Enabled);
                  delay(2000);
                  lcd.clear();
                  EEPROM.write(109 , 1);
@@ -372,8 +372,8 @@ void Activate_Menu_Option_NAVI() {
                  lcd.print(F("Status : "));
                  GYRO_Enabled = 1;
                  lcd.print(F("ON "));
-                 Serial.print(F("Gyro:"));
-                 Serial.println(GYRO_Enabled);
+                 message_out.print(F("Gyro:"));
+                 message_out.println(GYRO_Enabled);
                  delay(100);
                  }
                if (!Minus_Key_X) {
@@ -381,8 +381,8 @@ void Activate_Menu_Option_NAVI() {
                  lcd.print(F("Status : "));
                  GYRO_Enabled = 0;
                  lcd.print(F("OFF"));
-                 Serial.print(F("Gyro:"));
-                 Serial.println(GYRO_Enabled);
+                 message_out.print(F("Gyro:"));
+                 message_out.println(GYRO_Enabled);
                  delay(100);
                  }
        }
@@ -398,15 +398,15 @@ void Activate_Menu_Option_NAVI() {
        lcd.setCursor(0,1);
        lcd.print(F("P = "));
        lcd.print(GPower);
-       Serial.print(F("Gyro PID P = :"));
-       Serial.println(GPower);
+       message_out.print(F("Gyro PID P = :"));
+       message_out.println(GPower);
        Menu_Complete_NAVI = false;
        while (Menu_Complete_NAVI == false) {
              Read_Membrane_Keys();
              delay(100);
              //Enter Code Here to Cycle until stop key is pressed.
              if(!Start_Key_X){
-             Serial.println(F("Settings Saved"));
+             message_out.println(F("Settings Saved"));
              Menu_Complete_NAVI = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -428,8 +428,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.setCursor(0,1);
                lcd.print(F("P = "));
                lcd.print(GPower);
-               Serial.print(F("Gyro PID P = :"));
-               Serial.println(GPower);
+               message_out.print(F("Gyro PID P = :"));
+               message_out.println(GPower);
                }
              if (!Minus_Key_X) {
                GPower = GPower - 0.01;
@@ -439,8 +439,8 @@ void Activate_Menu_Option_NAVI() {
                lcd.setCursor(0,1);
                lcd.print(F("P = "));
                lcd.print(GPower);
-               Serial.print(F("Gyro PID P = :"));
-               Serial.println(GPower);
+               message_out.print(F("Gyro PID P = :"));
+               message_out.println(GPower);
                }
 
              }

@@ -40,9 +40,9 @@ void Manouver_Mow_The_Grass() {
     SetPins_ToGoForwards();
 
     Loop_Cycle_Mowing = (Loop_Cycle_Mowing + 1);
-    Serial.print(F("Loop:"));
-    Serial.print(Loop_Cycle_Mowing);
-    Serial.print(F("|"));
+    message_out.print(F("Loop:"));
+    message_out.print(Loop_Cycle_Mowing);
+    message_out.print(F("|"));
     
     #if defined(LCD_KEYPAD)
       lcd.setCursor(13, 1);
@@ -54,8 +54,8 @@ void Manouver_Mow_The_Grass() {
     // If the GYRO is activated the compass will be ignored and the mower uses the GYRO instead.
     if ((Compass_Activate == 1) && (Compass_Heading_Hold_Enabled == 1) && (GYRO_Enabled == 0) ) {
     	if (Loop_Cycle_Mowing % 10 == 0 ) {
-			Serial.print(F("C-Lock:OFF"));
-			Serial.print(F("|"));
+			message_out.print(F("C-Lock:OFF"));
+			message_out.print(F("|"));
 
 			#if defined(LCD_KEYPAD)
 			  Print_LCD_Mowing();
@@ -69,8 +69,8 @@ void Manouver_Mow_The_Grass() {
 	}
 
     if (GYRO_Enabled == 1) {
-        Serial.print(F("G-Lock:OFF"));
-        Serial.print(F("|"));
+        message_out.print(F("G-Lock:OFF"));
+        message_out.print(F("|"));
         
         #if defined(LCD_KEYPAD)
           Print_LCD_Mowing();
@@ -93,8 +93,8 @@ void Manouver_Mow_The_Grass() {
         
         // Normal Random Mowing no compass Assistance
         if ((Compass_Heading_Hold_Enabled == 0) && (GYRO_Enabled == 0)) {
-          Serial.print(F("C-Lock:OFF"));
-          Serial.print(F("|"));
+          message_out.print(F("C-Lock:OFF"));
+          message_out.print(F("|"));
           
           #if defined(LCD_KEYPAD)
             Print_LCD_Mowing();
@@ -106,8 +106,8 @@ void Manouver_Mow_The_Grass() {
 
         // Normal Random Mowing no GYRO Assistance
         if (GYRO_Enabled == 0) {
-          Serial.print(F("GYRO:OFF"));
-          Serial.print(F("|"));
+          message_out.print(F("GYRO:OFF"));
+          message_out.print(F("|"));
           Motor_Action_Go_Mowing_Speed();
           GYRO_Heading_Locked = 0;
           }          
@@ -117,7 +117,7 @@ void Manouver_Mow_The_Grass() {
         if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1) && (GYRO_Enabled == 0) )  {
            Get_Compass_Reading();                                                      // Gets the latest compass reading
            Heading_Lock = Compass_Heading_Degrees;                                     // saves this compass reading to the heading lock
-           Serial.print("Locked");
+           message_out.print("Locked");
            Compass_Heading_Locked = 1;                                                 // Turns on the heading lock feature
            Motor_Action_Go_Mowing_Speed();
            }
@@ -135,8 +135,8 @@ void Manouver_Mow_The_Grass() {
         Motor_Action_Go_Mowing_Speed();
         Print_LCD_Parallel();
 
-        Serial.print("Parallel:ON");
-        Serial.print(F("|"));
+        message_out.print("Parallel:ON");
+        message_out.print(F("|"));
 
         if ((Compass_Heading_Hold_Enabled == 1) && (Compass_Activate == 1))  {         // use the heading hold funtion for Parallel Mowing
            Get_Compass_Reading();                                                      // Gets the latest compass reading
@@ -146,7 +146,7 @@ void Manouver_Mow_The_Grass() {
            }
         else {
           Motor_Action_Go_Mowing_Speed();                                                // if the compass is not activated
-          Serial.println("Compass not activated in the settings");
+          message_out.println("Compass not activated in the settings");
           }
         
         }
@@ -159,8 +159,8 @@ void Manouver_Mow_The_Grass() {
           Print_LCD_Spiral();
           #endif
         
-        Serial.print("Spiral:ON");
-        Serial.print(F("|"));
+        message_out.print("Spiral:ON");
+        message_out.print(F("|"));
         Motor_Action_Go_Mowing_Speed();
         }
 
@@ -174,8 +174,8 @@ void Manouver_Mow_The_Grass() {
       // Normal Random Mowing
       if (Pattern_Mow == 0) {
          if ((Compass_Heading_Locked == 0) && (GYRO_Enabled == 0)) {
-           Serial.print(F("C-Lock:OFF"));
-           Serial.print(F("|"));
+           message_out.print(F("C-Lock:OFF"));
+           message_out.print(F("|"));
 
            #if defined(LCD_KEYPAD)
              lcd.setCursor(0, 1);  
@@ -186,8 +186,8 @@ void Manouver_Mow_The_Grass() {
            Compass_Steering_Status = 0;                                             // TFT Information
            }
         if ((GYRO_Heading_Locked == 0) && (GYRO_Enabled == 0) && (Compass_Activate == 0)) {
-           Serial.print(F("G-Lock:OFF"));
-           Serial.print(F("|"));
+           message_out.print(F("G-Lock:OFF"));
+           message_out.print(F("|"));
            
            #if defined(LCD_KEYPAD)
              lcd.setCursor(0, 1);  
@@ -206,8 +206,8 @@ void Manouver_Mow_The_Grass() {
                 Calculate_Compass_Wheel_Compensation();
                 Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
                 Print_LCD_Compass_Mowing();
-                Serial.print(F("C-Lock:ON_"));
-                Serial.print("|");
+                message_out.print(F("C-Lock:ON_"));
+                message_out.print("|");
                 }
         }
 
@@ -218,8 +218,8 @@ void Manouver_Mow_The_Grass() {
           Calculate_GYRO_Wheel_Compensation();
           Motor_Action_Dynamic_PWM_Steering();              // Removes the full speed function if the mower is trying to hold to the compass heading.
           Print_LCD_Compass_Mowing();
-          Serial.print(F("G-Lock:ON_"));
-          Serial.print("|");
+          message_out.print(F("G-Lock:ON_"));
+          message_out.print("|");
           }
         }
       
@@ -227,17 +227,17 @@ void Manouver_Mow_The_Grass() {
         
         
        if (Pattern_Mow == 1) {
-           Serial.print("||Mow");
+           message_out.print("||Mow");
            Pattern_Mow_Parallel();
            }
            
        if (Pattern_Mow == 2) {
-          Serial.print("@Mow");
+          message_out.print("@Mow");
           Pattern_Mow_Spirals();                                // For pattern mow = 2 i.e. circular motion.
           }
 
        if (Pattern_Mow == 3) {
-          Serial.print("Wire Mow");
+          message_out.print("Wire Mow");
           Pattern_Mow_Wire();                                // For pattern mow = 2 i.e. circular motion.
           }
     
@@ -254,9 +254,9 @@ void Manouver_Mow_The_Grass() {
   if ((Pattern_Mow == 2 ) && (Spiral_Mow < 3)) Max_Cycles_Active  = Max_Cycles_Spirals;         // if spiral is selected and its a LH or RH spiral
   
   if (Loop_Cycle_Mowing > Max_Cycles_Active) {                    // 150 the max length (Max_Cycles) for my garden. Adjust accordingly in the setup
-     Serial.println(F(""));
-     Serial.println(F("Loop Cycle at Max"));
-     Serial.println(F(""));
+     message_out.println(F(""));
+     message_out.println(F("Loop Cycle at Max"));
+     message_out.println(F(""));
      Motor_Action_Stop_Spin_Blades();                    // Stop the blades from spinning
      Manouver_Turn_Around();                             // Turn around the mower
      Loop_Cycle_Mowing = 0;                              // Restes the loop cycle to start again.
@@ -278,9 +278,9 @@ void Manouver_Aerate_The_Grass() {
 
   SetPins_ToGoForwards();
   Loop_Cycle_Mowing = (Loop_Cycle_Mowing + 1);
-  Serial.print(F("Loop:"));
-  Serial.print(Loop_Cycle_Mowing);
-  Serial.print(F("|"));
+  message_out.print(F("Loop:"));
+  message_out.print(Loop_Cycle_Mowing);
+  message_out.print(F("|"));
 
   if (Loop_Cycle_Mowing < Next_Drill_Target)  {
     Motor_Action_Go_Mowing_Speed();
@@ -296,15 +296,15 @@ void Manouver_Aerate_The_Grass() {
       Next_Drill_Target = Loop_Cycle_Mowing + Drill_Spacing;
       }
    else {
-    Serial.println(F("Drill Disramed"));
+    message_out.println(F("Drill Disramed"));
     delay(3000);
     }
    } 
 
   if (Loop_Cycle_Mowing > Max_Cycles_Straight ) {                    // 150 the max length (Max_Cycles) for my garden. Adjust accordingly in the setup
-     Serial.println(F(""));
-     Serial.println(F("Loop Cycle at Max"));
-     Serial.println(F(""));
+     message_out.println(F(""));
+     message_out.println(F("Loop Cycle at Max"));
+     message_out.println(F(""));
      Manouver_Turn_Around();                             // Turn around the mower
      Loop_Cycle_Mowing = 0;                              // Restes the loop cycle to start again.
      }
@@ -335,8 +335,8 @@ void Manouver_Aerate_The_Grass() {
 
 void Manouver_Find_Wire_Track()  {
 
-  Serial.println(F(""));
-  Serial.println(F("Find Wire Function Activated"));
+  message_out.println(F(""));
+  message_out.println(F("Find Wire Function Activated"));
 
   bool Finished_Wire_Find = 0;
   
@@ -362,8 +362,8 @@ void Manouver_Find_Wire_Track()  {
           for (int i = 0; i <= 1; i++) {
         
               Get_WIFI_Commands();
-              Serial.print(F("Position Try = "));  
-              Serial.println(i);
+              message_out.print(F("Position Try = "));  
+              message_out.println(i);
               ADCMan.run();
               UpdateWireSensor();
               delay(20);
@@ -400,15 +400,15 @@ void Manouver_Find_Wire_Track()  {
                 UpdateWireSensor();                                                                       // Read the wire sensor and see of the mower is now  or outside the wire
                 ADCMan.run();
                 PrintBoundaryWireStatus();                                                                // Prints of the status of the wire sensor readings.
-                Serial.println(F(""));
+                message_out.println(F(""));
                 if (Manuel_Mode == 0) Get_WIFI_Commands(); 
                 if (Mower_Parked == 1) {
-                  Serial.println("Abort Wire Find");
+                  message_out.println("Abort Wire Find");
                   Abort_Wire_Find = 1;
                   }
                 if (cycle > Max_Cycle_Wire_Find_Back) {                                                   // Track forwards for Max_Cycle_Wire_Find_Back cycles
                     No_Wire_Found_Bck = 1;                                                                // if mower is still tracking after Max_Cycle_Wire_Find_Back cycles then cancel the find.
-                    Serial.println("Max Backward Cycles reached");
+                    message_out.println("Max Backward Cycles reached");
                   }
                 
                 }
@@ -421,7 +421,7 @@ void Manouver_Find_Wire_Track()  {
             if (( inside == true) && (Abort_Wire_Find == 0) && (No_Wire_Found_Fwd == 0) ) {             // If the Mower is situated  the wire then run the following code.
                 ADCMan.run();
                 UpdateWireSensor();
-                Serial.println(F("CODE POSITION - MOTOR FORWARDS LOOP:  If statements"));
+                message_out.println(F("CODE POSITION - MOTOR FORWARDS LOOP:  If statements"));
                 PrintBoundaryWireStatus();
                 Motor_Action_Stop_Motors();
                 delay(1000);  
@@ -453,10 +453,10 @@ void Manouver_Find_Wire_Track()  {
                   UpdateWireSensor();                                                                   // Read the wire sensor and see of the mower is now  or outside the wire
                   ADCMan.run();
                   PrintBoundaryWireStatus();                                                            // Prints of the status of the wire sensor readings.
-                  Serial.println(F(""));
+                  message_out.println(F(""));
                   if (Manuel_Mode == 0) Get_WIFI_Commands(); 
                   if (Mower_Parked == 1) {
-                    Serial.println("Abort Wire Find");
+                    message_out.println("Abort Wire Find");
                     Abort_Wire_Find = 1;
                     }
                   if (Bumper == true) {
@@ -472,7 +472,7 @@ void Manouver_Find_Wire_Track()  {
                   
                   if (cycle > Max_Cycle_Wire_Find) {                                                    // Track forwards for Max_Cycle_Wire_Find_Fwd cycles
                     No_Wire_Found_Fwd = 1;                                                              // if mower is still tracking after Max_Cycle_Wire_Find_Fwd cycles then cancel the find.
-                    Serial.println("Max Forward Cycles reached");
+                    message_out.println("Max Forward Cycles reached");
                   }
                
                 }
@@ -510,11 +510,11 @@ void Manouver_Find_Wire_Track()  {
             delay(1000);
                if (CW_Tracking_To_Charge == 1) {
                   SetPins_ToTurnRight();                                                                // Track perimeter wire in a Clockwise Direction to the charging station
-                  Serial.println(F("CW Tracking to Charger"));
+                  message_out.println(F("CW Tracking to Charger"));
                }
                if (CCW_Tracking_To_Charge == 1) {
                   SetPins_ToTurnLeft(); 
-                  Serial.println(F("CCW Tracking toCharger")); 
+                  message_out.println(F("CCW Tracking toCharger")); 
                }
             }
         
@@ -529,11 +529,11 @@ void Manouver_Find_Wire_Track()  {
             delay(1000);
                if (CW_Tracking_To_Start == 1) {
                   SetPins_ToTurnRight();                                                                // Track perimeter wire in a Clockwise Direction to the charging station
-                  Serial.println(F("CW Tracking to Exit"));
+                  message_out.println(F("CW Tracking to Exit"));
                }
                if (CCW_Tracking_To_Start == 1) {
                   SetPins_ToTurnLeft(); 
-                  Serial.println(F("CCW Tracking to Exit")); 
+                  message_out.println(F("CCW Tracking to Exit")); 
                }
             }
         
@@ -558,17 +558,17 @@ void Manouver_Find_Wire_Track()  {
               lcd.print("Spin To Wire");
               #endif
         
-          Serial.println(F(""));
-          Serial.print(F("Turning onto Wire:"));
-          Serial.println(F(""));
+          message_out.println(F(""));
+          message_out.print(F("Turning onto Wire:"));
+          message_out.println(F(""));
         
           // Spins the mower over the wire in the driection of tracking
           while (( inside == false)  && (Abort_Wire_Find == 0) && (No_Wire_Found_Fwd == 0)  && (Spin_Attempts < Max_Spin_Attempts )) {
                 while (( inside != true) && (Spin_Attempts < Max_Spin_Attempts )) {                                                             // Do this loop until mower is back  the wire fence
-                Serial.println(F(""));
-                Serial.print(F("Turn on Wire Attempts:"));
-                Serial.print(Spin_Attempts);
-                Serial.print(F("|:"));
+                message_out.println(F(""));
+                message_out.print(F("Turn on Wire Attempts:"));
+                message_out.print(Spin_Attempts);
+                message_out.print(F("|:"));
                   #if defined(LCD_KEYPAD)
                   lcd.setCursor(0,1);       
                   lcd.print(Spin_Attempts);
@@ -594,7 +594,7 @@ void Manouver_Find_Wire_Track()  {
           
           Motor_Action_Stop_Motors();
           if ((Abort_Wire_Find == 0) && (Spin_Attempts < Max_Spin_Attempts )) {
-            Serial.println(F("Track Wire Function Complete - ON WIRE??"));
+            message_out.println(F("Track Wire Function Complete - ON WIRE??"));
             
             #if defined(LCD_KEYPAD)
               lcd.clear();
@@ -614,7 +614,7 @@ void Manouver_Find_Wire_Track()  {
         
           // if an abort has been received or the mower is not spinning to the right diection on the the wire then park it.
           if ((Abort_Wire_Find == 1) || (Spin_Attempts >= Max_Spin_Attempts))  {
-            Serial.println("Wire Find Aborted");
+            message_out.println("Wire Find Aborted");
             #if defined(LCD_KEYPAD)
             lcd.clear();
             lcd.print("Wire Find ABORT!!");
@@ -627,7 +627,7 @@ void Manouver_Find_Wire_Track()  {
             }
         
           if (No_Wire_Found_Fwd == 1) {
-            Serial.println("Re-starting wire find");
+            message_out.println("Re-starting wire find");
             SetPins_ToGoForwards();
             }
   Finished_Wire_Find = 1;
@@ -636,9 +636,9 @@ void Manouver_Find_Wire_Track()  {
 Motor_Action_Stop_Motors(); 
 
 if (Mower_Error == 1) {
-  Serial.println(F(""));
-  Serial.println(F("Mower in Error Mode"));
-  Serial.println(F(""));
+  message_out.println(F(""));
+  message_out.println(F("Mower in Error Mode"));
+  message_out.println(F(""));
   }
 
 }
@@ -656,19 +656,19 @@ void Manouver_Turn_Around() {
     if (Manuel_Mode == 0) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
     delay(100);
     
-    Serial.println(F(""));
-    Serial.println(F(""));
-    if (Outside_Wire == 1)                                                  Serial.println(F("Mower is Outside the Wire"));
-    if ((GPS_Enabled == 1) && (GPS_Type == 1) && (GPS_Inside_Fence == 0))   Serial.println(F("Mower is Outside the GPS Fence"));
-    if (Wheel_Blocked == 4)                                                 Serial.println(F("Mower Wheels are jammed"));
+    message_out.println(F(""));
+    message_out.println(F(""));
+    if (Outside_Wire == 1)                                                  message_out.println(F("Mower is Outside the Wire"));
+    if ((GPS_Enabled == 1) && (GPS_Type == 1) && (GPS_Inside_Fence == 0))   message_out.println(F("Mower is Outside the GPS Fence"));
+    if (Wheel_Blocked == 4)                                                 message_out.println(F("Mower Wheels are jammed"));
     
     if (TFT_Screen_Menu == 1) {
         if (Robot_Type == 1) Send_Mower_Running_Data();    
         if (Robot_Type == 2) Send_Aerator_Running_Data();         // Update TFT Screen
         }
 
-    Serial.println(F("Mower is Turning"));
-    Serial.println(F(""));
+    message_out.println(F("Mower is Turning"));
+    message_out.println(F(""));
     delay(80);
 
     // Back up the mower
@@ -703,13 +703,13 @@ void Manouver_Turn_Around() {
         Check_Wire_In_Out();
     
         if (Outside_Wire == 1) { 
-          Serial.println(F("Outside Wire 1"));
+          message_out.println(F("Outside Wire 1"));
           Running_Test_for_Boundary_Wire(); 
           delay(100);
           UpdateWireSensor();
           Check_Wire_In_Out();
               if (Outside_Wire == 1) { 
-                Serial.println(F("Outside Wire 2"));
+                message_out.println(F("Outside Wire 2"));
                 //SetPins_ToGoBackwards();
                 //Motor_Action_Go_Full_Speed();
                 //delay(300);
@@ -720,7 +720,7 @@ void Manouver_Turn_Around() {
                 UpdateWireSensor();
                 Check_Wire_In_Out();
                 if (Outside_Wire == 1) { 
-                      Serial.println(F("Outside Wire = 3 - Must be really outside...."));
+                      message_out.println(F("Outside Wire = 3 - Must be really outside...."));
                       //SetPins_ToGoForwards();
                       //Motor_Action_Go_Full_Speed();
                       //delay(300);
@@ -743,15 +743,15 @@ void Manouver_Turn_Around() {
         Check_GPS_In_Out();       
     
         if (GPS_Inside_Fence == 0) {                                  // Mower is still outside the fence
-          Serial.println(F("Outside GPS Fence 1"));
+          message_out.println(F("Outside GPS Fence 1"));
           delay(100);
           Check_GPS_In_Out();                                         // Check the GPS signal again
               if (GPS_Inside_Fence == 0) { 
-                Serial.println(F("Outside GPS Fence 2"));
+                message_out.println(F("Outside GPS Fence 2"));
                 delay(1000);
                 Check_GPS_In_Out(); 
                 if (GPS_Inside_Fence == 0) { 
-                      Serial.println(F("Outside GPS Fence = 3 - Must be really outside...."));
+                      message_out.println(F("Outside GPS Fence = 3 - Must be really outside...."));
                       }
                 }
     
@@ -781,9 +781,9 @@ void Manouver_Turn_Around() {
       if (Robot_Type == 1) Send_Mower_Running_Data();
       if (Robot_Type == 2) Send_Aerator_Running_Data();
       }
-    Serial.println(F(""));
-    Serial.println(F("Mower Turned Around - Wire/GPS"));
-    Serial.println(F(""));
+    message_out.println(F(""));
+    message_out.println(F("Mower Turned Around - Wire/GPS"));
+    message_out.println(F(""));
 
 #else
 	if(Mower_RunBack == 0) {
@@ -797,8 +797,8 @@ void Manouver_Turn_Around() {
 
 void Manouver_Turn_Around_non_blocking() {
 #if defined(NODELAY_BACKWARD)
-	Serial.print(F("RunBackPhase:"));
-	Serial.print(Manouver_Turn_Around_Phase);
+	message_out.print(F("RunBackPhase:"));
+	message_out.print(Manouver_Turn_Around_Phase);
 
 	switch (Manouver_Turn_Around_Phase)
 	{
@@ -809,24 +809,24 @@ void Manouver_Turn_Around_non_blocking() {
 		break;
 
 	case 1:
-		Serial.println(F("Manouver_Turn_Around starting.."));
+		message_out.println(F("Manouver_Turn_Around starting.."));
 		Motor_Action_Stop_Motors();
 		if (Manuel_Mode == 0) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
 
-		Serial.println(F(""));
-		Serial.println(F(""));
-        if (Outside_Wire == 1)                                                  Serial.println(F("Mower is Outside the Wire"));
-        if ((GPS_Enabled == 1) && (GPS_Type == 1) && (GPS_Inside_Fence == 0))   Serial.println(F("Mower is Outside the GPS Fence"));
-        if (Wheel_Blocked == 4)                                                 Serial.println(F("Mower Wheels are jammed"));
-		if (Bumper == 1)		                                                Serial.println(F("Mower bumper hit object"));
+		message_out.println(F(""));
+		message_out.println(F(""));
+        if (Outside_Wire == 1)                                                  message_out.println(F("Mower is Outside the Wire"));
+        if ((GPS_Enabled == 1) && (GPS_Type == 1) && (GPS_Inside_Fence == 0))   message_out.println(F("Mower is Outside the GPS Fence"));
+        if (Wheel_Blocked == 4)                                                 message_out.println(F("Mower Wheels are jammed"));
+		if (Bumper == 1)		                                                message_out.println(F("Mower bumper hit object"));
 
 		if (TFT_Screen_Menu == 1) {
 			if (Robot_Type == 1) Send_Mower_Running_Data();
 			if (Robot_Type == 2) Send_Aerator_Running_Data();         // Update TFT Screen
 			}
 
-		Serial.println(F("Mower is Turning"));
-		Serial.println(F(""));
+		message_out.println(F("Mower is Turning"));
+		message_out.println(F(""));
 		Manouver_Turn_Around_Phase++;
 		break;
 
@@ -889,13 +889,13 @@ void Manouver_Turn_Around_non_blocking() {
 			Check_Wire_In_Out();
 
 			if (Outside_Wire == 1) {
-			  Serial.println(F("Outside Wire 1"));
+			  message_out.println(F("Outside Wire 1"));
 			  Running_Test_for_Boundary_Wire();
 			  delay(100);
 			  UpdateWireSensor();
 			  Check_Wire_In_Out();
 				  if (Outside_Wire == 1) {
-					Serial.println(F("Outside Wire 2"));
+					message_out.println(F("Outside Wire 2"));
 					//SetPins_ToGoBackwards();
 					//Motor_Action_Go_Full_Speed();
 					//delay(300);
@@ -906,7 +906,7 @@ void Manouver_Turn_Around_non_blocking() {
 					UpdateWireSensor();
 					Check_Wire_In_Out();
 					if (Outside_Wire == 1) {
-						  Serial.println(F("Outside Wire = 3 - Must be really outside...."));
+						  message_out.println(F("Outside Wire = 3 - Must be really outside...."));
 						  //SetPins_ToGoForwards();
 						  //Motor_Action_Go_Full_Speed();
 						  //delay(300);
@@ -929,15 +929,15 @@ void Manouver_Turn_Around_non_blocking() {
 			Check_GPS_In_Out();
 
 			if (GPS_Inside_Fence == 0) {                                  // Mower is still outside the fence
-			  Serial.println(F("Outside GPS Fence 1"));
+			  message_out.println(F("Outside GPS Fence 1"));
 			  delay(100);
 			  Check_GPS_In_Out();                                         // Check the GPS signal again
 				  if (GPS_Inside_Fence == 0) {
-					Serial.println(F("Outside GPS Fence 2"));
+					message_out.println(F("Outside GPS Fence 2"));
 					delay(1000);
 					Check_GPS_In_Out();
 					if (GPS_Inside_Fence == 0) {
-						  Serial.println(F("Outside GPS Fence = 3 - Must be really outside...."));
+						  message_out.println(F("Outside GPS Fence = 3 - Must be really outside...."));
 						  }
 					}
 
@@ -968,9 +968,9 @@ void Manouver_Turn_Around_non_blocking() {
 		  if (Robot_Type == 1) Send_Mower_Running_Data();
 		  if (Robot_Type == 2) Send_Aerator_Running_Data();
 		  }
-		Serial.println(F(""));
-		Serial.println(F("Mower Turned Around - Wire/GPS/Bumper/Wheels jammed"));
-		Serial.println(F(""));
+		message_out.println(F(""));
+		message_out.println(F("Mower Turned Around - Wire/GPS/Bumper/Wheels jammed"));
+		message_out.println(F(""));
 
 		Manouver_Turn_Around_Phase = 0;
 		Mower_RunBack = 0;
@@ -983,7 +983,7 @@ void Manouver_Turn_Around_non_blocking() {
 void Manouver_Turn_Around_Sonar() {
 #if not defined(NODELAY_BACKWARD)
   Sonar_Status = 1;
-  Serial.println(F("Mower is Turning - Sonar"));
+  message_out.println(F("Mower is Turning - Sonar"));
   Motor_Action_Stop_Motors(); 
   
   if (TFT_Screen_Menu == 1) {
@@ -1003,11 +1003,11 @@ void Manouver_Turn_Around_Sonar() {
         lcd.print("Go Right -->       ");
         #endif
       
-      Serial.println(F(""));
-      Serial.println(F("Sonar Turning Right"));
-      if (distance1 < maxdistancesonar) Serial.println(F("Distance 1 Triggered"));
-      if (distance2 < maxdistancesonar) Serial.println(F("Distance 2 Triggered"));
-      Serial.println(F(""));
+      message_out.println(F(""));
+      message_out.println(F("Sonar Turning Right"));
+      if (distance1 < maxdistancesonar) message_out.println(F("Distance 1 Triggered"));
+      if (distance2 < maxdistancesonar) message_out.println(F("Distance 2 Triggered"));
+      message_out.println(F(""));
       SetPins_ToTurnRight();
       Motor_Action_Turn_Speed();
       delay(Mower_Turn_Delay_Max);
@@ -1021,9 +1021,9 @@ void Manouver_Turn_Around_Sonar() {
         lcd.print("<-- Go Left      ");
         #endif
 
-      Serial.println(F("Sonar Turning Left"));
-      if (distance1 < maxdistancesonar) Serial.println(F("Distance 3 Triggered"));
-      Serial.println(F(""));
+      message_out.println(F("Sonar Turning Left"));
+      if (distance1 < maxdistancesonar) message_out.println(F("Distance 3 Triggered"));
+      message_out.println(F(""));
       SetPins_ToTurnLeft();
       Motor_Action_Turn_Speed();
       delay(Mower_Turn_Delay_Max);
@@ -1041,8 +1041,8 @@ void Manouver_Turn_Around_Sonar() {
     if (Robot_Type == 1) Send_Mower_Running_Data();
     if (Robot_Type == 2) Send_Aerator_Running_Data();
     }
-  Serial.println(F("Mower Turned Around from Sonar Hit"));
-  Serial.println(F(""));
+  message_out.println(F("Mower Turned Around from Sonar Hit"));
+  message_out.println(F(""));
   Skip_Sonar_Turn = 0;
 
 #else
@@ -1057,8 +1057,8 @@ void Manouver_Turn_Around_Sonar() {
 
 void Manouver_Turn_Around_Sonar_non_blocking() {
 #if defined(NODELAY_BACKWARD)
-	Serial.print(F("RunBackPhaseS:"));
-	Serial.print(Manouver_Turn_Around_Sonar_Phase);
+	message_out.print(F("RunBackPhaseS:"));
+	message_out.print(Manouver_Turn_Around_Sonar_Phase);
 
 	switch (Manouver_Turn_Around_Sonar_Phase)
 	{
@@ -1070,7 +1070,7 @@ void Manouver_Turn_Around_Sonar_non_blocking() {
 
 	case 1:
 	  Sonar_Status = 1;
-	  Serial.println(F("Mower is Turning - Sonar"));
+	  message_out.println(F("Mower is Turning - Sonar"));
 	  Motor_Action_Stop_Motors();
 
 	  if (TFT_Screen_Menu == 1) {
@@ -1107,11 +1107,11 @@ void Manouver_Turn_Around_Sonar_non_blocking() {
 			lcd.print("Go Right -->       ");
 			#endif
 
-		  Serial.println(F(""));
-		  Serial.println(F("Sonar Turning Right"));
-		  if (distance1 < maxdistancesonar) Serial.println(F("Distance 1 Triggered"));
-		  if (distance2 < maxdistancesonar) Serial.println(F("Distance 2 Triggered"));
-		  Serial.println(F(""));
+		  message_out.println(F(""));
+		  message_out.println(F("Sonar Turning Right"));
+		  if (distance1 < maxdistancesonar) message_out.println(F("Distance 1 Triggered"));
+		  if (distance2 < maxdistancesonar) message_out.println(F("Distance 2 Triggered"));
+		  message_out.println(F(""));
 		  SetPins_ToTurnRight();
 	  }
 
@@ -1122,9 +1122,9 @@ void Manouver_Turn_Around_Sonar_non_blocking() {
 			lcd.print("<-- Go Left      ");
 			#endif
 
-		  Serial.println(F("Sonar Turning Left"));
-		  if (distance1 < maxdistancesonar) Serial.println(F("Distance 3 Triggered"));
-		  Serial.println(F(""));
+		  message_out.println(F("Sonar Turning Left"));
+		  if (distance1 < maxdistancesonar) message_out.println(F("Distance 3 Triggered"));
+		  message_out.println(F(""));
 		  SetPins_ToTurnLeft();
 	  }
 
@@ -1150,8 +1150,8 @@ void Manouver_Turn_Around_Sonar_non_blocking() {
 			if (Robot_Type == 1) Send_Mower_Running_Data();
 			if (Robot_Type == 2) Send_Aerator_Running_Data();
 			}
-		  Serial.println(F("Mower Turned Around from Sonar Hit"));
-		  Serial.println(F(""));
+		  message_out.println(F("Mower Turned Around from Sonar Hit"));
+		  message_out.println(F(""));
 		  Skip_Sonar_Turn = 0;
 
 		  Manouver_Turn_Around_Sonar_Phase = 0;
@@ -1181,9 +1181,9 @@ void Manouver_Manuel_Mode() {
 
 void Manouver_Start_Mower() {
 
-  Serial.println(F(""));
-  Serial.println(F("Starting to Mow!! "));   
-  Serial.println(F(""));
+  message_out.println(F(""));
+  message_out.println(F("Starting to Mow!! "));   
+  message_out.println(F(""));
   
   if ((Mower_Track_To_Exit == 1) && (TFT_Screen_Menu == 1)) {
     Mower_Track_To_Exit   = 0;
@@ -1195,8 +1195,8 @@ void Manouver_Start_Mower() {
 
   // If wire is not detected when exiting the dock do the following
   if ((Mower_Docked == 1) && (Exiting_Dock == 1))   {                  
-        Serial.println(F(""));
-        Serial.println(F("Mower = Docked | Quick Start"));
+        message_out.println(F(""));
+        message_out.println(F("Mower = Docked | Quick Start"));
         Mower_Track_To_Exit   = 0;
         Exiting_Dock          = 0;
         Mower_Parked          = 0;
@@ -1227,11 +1227,11 @@ void Manouver_Start_Mower() {
   
   // If wire is not detected when exiting the dock do the following
   if ((Wire_Detected == 0) && ((Exiting_Dock == 1) || (Mower_Running == 1)) )   {                  
-        Serial.println(F(""));
-        Serial.println(F("Mower = Running | Exit Dock = 1"));
-        Serial.println(F("Perimeter Wire Still not detected"));
+        message_out.println(F(""));
+        message_out.println(F("Mower = Running | Exit Dock = 1"));
+        message_out.println(F("Perimeter Wire Still not detected"));
         //Manouver_Park_The_Mower();
-        Serial.println(F("Sending Tracking Data in Wire detect = 0"));
+        message_out.println(F("Sending Tracking Data in Wire detect = 0"));
         Robot_Status_Value = 4;         // Sends the mower status value to the TFT Screen 4 = Error Status.
         Mower_Error_Value = 1;          // Describes the error 1 = No Wire, 
         if (Mower_Running == 1) {
@@ -1247,8 +1247,8 @@ void Manouver_Start_Mower() {
   
   // If wire is not detected when the mower is running then send the mower into an error state.
   if ((Perimeter_Wire_Enabled == 0) && (Mower_Running == 1)) {                     
-        Serial.println(F(""));
-        Serial.println("Perimeter Wire Not Activated");
+        message_out.println(F(""));
+        message_out.println("Perimeter Wire Not Activated");
         Calculate_TFT_Robot_Status_Value(); 
         Send_Mower_Tracking_Data();       
         }
@@ -1269,12 +1269,12 @@ void Manouver_Mower_Exit_Dock() {
   Robot_Status_Value    = 9;
 
   
-  Serial.println(F(""));
-  Serial.println(F("Updating TFT with Exit Dock Information"));
-  Serial.println(F(""));
+  message_out.println(F(""));
+  message_out.println(F("Updating TFT with Exit Dock Information"));
+  message_out.println(F(""));
   if ((Mower_Docked == 1) || (Mower_Parked == 1))  Send_Mower_Docked_Data();
   else Send_Mower_Tracking_Data();               // Send docked numbers to break out of the cycle and change it to mower exiting dock mode.    
-  Serial.println(F(""));                    // Send Command to the TFT
+  message_out.println(F(""));                    // Send Command to the TFT
   Get_WIFI_Commands();                      // Command WIFI
   }
 
@@ -1326,7 +1326,7 @@ void Manouver_Park_The_Mower_Low_Batt() {
   Motor_Action_Stop_Spin_Blades();
  
   if ((Exiting_Dock == 1) && (TFT_Screen_Menu == 1))  {
-        Serial.println(F("Sending TFT Tracking Data"));
+        message_out.println(F("Sending TFT Tracking Data"));
         Mower_Parked_Low_Batt = 1;
         Mower_Error           = 1;
         Exiting_Dock          = 0;
@@ -1334,7 +1334,7 @@ void Manouver_Park_The_Mower_Low_Batt() {
         Send_Mower_Tracking_Data();
         }
   if ((Mower_Running == 1) &&  (TFT_Screen_Menu == 1)) {
-        Serial.println(F("Sending TFT Running Data"));
+        message_out.println(F("Sending TFT Running Data"));
         Mower_Parked_Low_Batt = 1;
         Mower_Error           = 1;
         Mower_Running         = 0;
@@ -1384,10 +1384,10 @@ void Manouver_Park_The_Mower() {
        
         //Calculate_TFT_Robot_Status_Value();   // gives wrong value dont use!!
         Robot_Status_Value = 2;
-        Serial.print("");
-        Serial.print(F("Parking Status 1 - Mower Status Value Sent = "));
-        Serial.print(Robot_Status_Value);
-        Serial.print("");
+        message_out.print("");
+        message_out.print(F("Parking Status 1 - Mower Status Value Sent = "));
+        message_out.print(Robot_Status_Value);
+        message_out.print("");
         Send_Mower_Tracking_Data();
         }
 
@@ -1406,9 +1406,9 @@ void Manouver_Park_The_Mower() {
         Exiting_Dock              = 0;
                
         Calculate_TFT_Robot_Status_Value();     
-        Serial.print(F("Parking Status 2-  Mower Status Value Sent = "));
-        Serial.print(Robot_Status_Value);
-        Serial.print("");
+        message_out.print(F("Parking Status 2-  Mower Status Value Sent = "));
+        message_out.print(Robot_Status_Value);
+        message_out.print("");
         if (Robot_Type == 1) Send_Mower_Running_Data();
         if (Robot_Type == 2) Send_Aerator_Running_Data();
         }
@@ -1427,10 +1427,10 @@ void Manouver_Park_The_Mower() {
         Exiting_Dock              = 0;              
         Robot_Status_Value        = 2;   
         Mower_Error_Value         = 0;
-        Serial.println("");
-        Serial.print(F("Parking Status 3 Error -  Mower Status Value Sent = "));
-        Serial.print(Robot_Status_Value);
-        Serial.println("");
+        message_out.println("");
+        message_out.print(F("Parking Status 3 Error -  Mower Status Value Sent = "));
+        message_out.print(Robot_Status_Value);
+        message_out.println("");
         Send_Mower_Error_Data();
         }
 
@@ -1474,10 +1474,10 @@ void Manouver_Hibernate_Mower() {
   // Package of daat the TFT is waiting for.  i.e. in Exit Dock Mode the TFT expects the Exit Dock TFT Data Package
   // and will hang if it recieves the running data package.
 
-  Serial.println(F("Hibernate Mower"));
+  message_out.println(F("Hibernate Mower"));
   
   if ((Exiting_Dock == 1) && (TFT_Screen_Menu == 1))  {
-        Serial.println(F("Sending TFT Tracking Data"));
+        message_out.println(F("Sending TFT Tracking Data"));
         Mower_Error           = 1;
         Exiting_Dock          = 0;
         Mower_Parked          = 0;  
@@ -1485,25 +1485,25 @@ void Manouver_Hibernate_Mower() {
         Send_Mower_Tracking_Data();
         }
   if ((Mower_Running == 1) &&  (TFT_Screen_Menu == 1)) {
-        Serial.println(F("Sending TFT Running Data"));        
+        message_out.println(F("Sending TFT Running Data"));        
         Mower_Error           = 1;
         Mower_Running         = 0;
         if (Tilt_Orientation_Sensed == 1)  {
-          Serial.println("Tilt Used");
+          message_out.println("Tilt Used");
           Mower_Error           = 3;
           Mower_Running         = 0;
           }
-        Serial.print(F("Mower Error before calc="));
-        Serial.println(Mower_Error);  
+        message_out.print(F("Mower Error before calc="));
+        message_out.println(Mower_Error);  
         Calculate_TFT_Robot_Status_Value();               // Updates the Mower status Value
-        Serial.print(F("Mower Error after calc="));
-        Serial.println(Mower_Error);  
+        message_out.print(F("Mower Error after calc="));
+        message_out.println(Mower_Error);  
         if (Robot_Type == 1) Send_Mower_Running_Data();
         if (Robot_Type == 2) Send_Aerator_Running_Data();
         }
 
   if ((Mower_Parked == 1) &&  (TFT_Screen_Menu == 1) && (Tilt_Orientation_Sensed == 0)) {
-        Serial.println(F("Sending TFT Parked Data"));
+        message_out.println(F("Sending TFT Parked Data"));
         Mower_Error           = 1;
         Mower_Parked          = 1;
         Calculate_TFT_Robot_Status_Value();               // Updates the Mower status Value
@@ -1533,14 +1533,14 @@ void Manouver_Go_To_Charging_Station() {
   Motor_Action_Stop_Motors();
   Motor_Action_Stop_Spin_Blades();
 
-  Serial.println(F("Funtion in Go To Charging Station"));
+  message_out.println(F("Funtion in Go To Charging Station"));
   Check_Mower_Status();
   
 
   if (Mower_Docked == 1) {
-    Serial.println(F(""));
-    Serial.println(F("Mower is already docked"));
-    Serial.println(F(""));
+    message_out.println(F(""));
+    message_out.println(F("Mower is already docked"));
+    message_out.println(F(""));
   }
   // Only activate this code if the mower is not already docked.
   if (Mower_Docked == 0) {
@@ -1551,7 +1551,7 @@ void Manouver_Go_To_Charging_Station() {
           Mower_Parked          = 0;
           Mower_Track_To_Charge = 1;
           Tracking_Wire         = 1;
-          Serial.println(F("Updating TFT with Exit Dock Information"));
+          message_out.println(F("Updating TFT with Exit Dock Information"));
           Calculate_TFT_Robot_Status_Value();
           Send_Mower_Docked_Data();         // Send docked numbers to break out of the cycle and change it to mower exiting dock mode.
           delay(4000);  
@@ -1563,7 +1563,7 @@ void Manouver_Go_To_Charging_Station() {
           Mower_Parked          = 0;
           Mower_Track_To_Charge = 1;
           Tracking_Wire         = 1;
-          Serial.println(F("Updating TFT with Exit Dock Information"));
+          message_out.println(F("Updating TFT with Exit Dock Information"));
           Calculate_TFT_Robot_Status_Value();
           if (Robot_Type == 1) Send_Mower_Running_Data();
           if (Robot_Type == 2) Send_Aerator_Running_Data();
@@ -1676,10 +1676,10 @@ void Manouver_Exit_To_Zone_X() {
    delay(400);   
    Turn_On_Relay();
    delay(1000);
-   Serial.println(F("Sending Tracking Data in Exit To Zone X"));
+   message_out.println(F("Sending Tracking Data in Exit To Zone X"));
    delay(200);   
 
-   Serial.println("In Exit Function");
+   message_out.println("In Exit Function");
    Check_Mower_Status();
    
    if ((Mower_Parked == 0) || (Mower_Docked == 1)) Manouver_Mower_Exit_Dock();          // Carry out the Exit Dock Manouver   
@@ -1688,22 +1688,22 @@ void Manouver_Exit_To_Zone_X() {
       Wire_Off = 0;                                             // Reset Wire OFF Count before checiking wire status
       Run_Initial_Boundary_Wire_Test();                         // Run the intial wire test again to give time for the auto wire to activate and be detected.
  
-      Serial.println("After Wire Test");
+      message_out.println("After Wire Test");
       Check_Mower_Status();
          
       if ((Wire_Detected == 0) && (Perimeter_Wire_Enabled == 1)) {
-                Serial.println(F(""));
-                Serial.println("Perimeter Wire Still not detected");
+                message_out.println(F(""));
+                message_out.println("Perimeter Wire Still not detected");
                 Robot_Status_Value = 4;         // Sends the mower status value to the TFT Screen 4 = Error Status.
                 Mower_Error_Value = 1;          // Describes the error 1 = No Wire, 
-                Serial.println(F("Sending Tracking Data in Wire detect = 0"));
+                message_out.println(F("Sending Tracking Data in Wire detect = 0"));
                 Send_Mower_Tracking_Data();
                 delay(5000);
                 Manouver_Park_The_Mower();
                 }
     
       if ((Wire_Detected == 1) && (Perimeter_Wire_Enabled == 1 ) && (Mower_Error_Value == 0) ) {
-          Serial.println(F("Boundary Wire - Detected - Lets GO!"));
+          message_out.println(F("Boundary Wire - Detected - Lets GO!"));
           }
 
 
@@ -1721,8 +1721,8 @@ void Manouver_Exit_To_Zone_X() {
           }
         
       if (Perimeter_Wire_Enabled == 0){
-           Serial.println(F(""));
-           Serial.println("Perimeter Wire not activated in settings");
+           message_out.println(F(""));
+           message_out.println("Perimeter Wire not activated in settings");
            //Manouver_Park_The_Mower();
            Manouver_Start_Mower();
            }  
@@ -1758,8 +1758,8 @@ void Manouver_Outside_Wire_ReFind_Function(){
      delay(500);
      distance_blockage = PingSonarX(trigPin1, echoPin1, 1, 1, 1, 4, 0);
      delay(500);
-     Serial.print(F("Distance measured from sonar :"));
-     Serial.println(distance_blockage);
+     message_out.print(F("Distance measured from sonar :"));
+     message_out.println(distance_blockage);
      
      // if the sonar is measuring an opening as the distance is greater than 300cm then move forward in that direction.
      if (distance_blockage > 400) {
@@ -1796,7 +1796,7 @@ void Manouver_Outside_Wire_ReFind_Function(){
      PrintBoundaryWireStatus();
   }
 
-   Serial.println("Mower is now back inside the wire......?");
+   message_out.println("Mower is now back inside the wire......?");
 
    #if defined(LCD_KEYPAD)
    lcd.clear();

@@ -9,9 +9,9 @@ void Check_Serial_Input_PIXHAWK() {
 
     // Print Comamnd to Serial Monitor
     if (Command != 0) {
-        Serial.print(F(""));
-        Serial.print(F(""));
-        Serial.println(Command);
+        message_out.print(F(""));
+        message_out.print(F(""));
+        message_out.println(Command);
         }
   }
 
@@ -23,39 +23,39 @@ void Execute_Serial_Command_PIXHAWK() {
 
 if (Command == 104) {                   // letter h
     Command = 0;
-    Serial.println(F("  "));
-    Serial.println(F("  "));
-    Serial.println(F("      PIXHAWK HELP MENU"));
-    Serial.println(F("      Enter the following letter"));
-    Serial.println(F("  -----------------------------"));
-    Serial.println(F("  a = ARM"));           //97
-    Serial.println(F("  b = AUTO MODE"));       //98
-    Serial.println(F("  c = ")); //99
-    Serial.println(F("  d = DIS-ARM"));         //100
-    Serial.println(F("  e = "));             //101
-    Serial.println(F("  f = Follow Mode"));           //102
-    Serial.println(F("  g = Guided Mode"));
-    Serial.println(F("  h = "));             //104
-    Serial.println(F("  i = "));          //105
-    Serial.println(F("  j = "));
-    Serial.println(F("  k = "));      //107
-    Serial.println(F("  l = "));           //108
-    Serial.println(F("  m = MANUAL Mode"));
-    Serial.println(F("  n = ACRO Mode"));
-    Serial.println(F("  o = "));             //111
-    Serial.println(F("  p = "));      //112
-    Serial.println(F("  q = Quit PIXHAWK Mode"));     //113
-    Serial.println(F("  r = "));    //114
-    Serial.println(F("  s = "));      //115
-    Serial.println(F("  t = "));
-    Serial.println(F("  u = "));
-    Serial.println(F("  v = "));       //118
-    Serial.println(F("  w = "));     //119
-    Serial.println(F("  x = "));       //120
-    Serial.println(F("  y = "));
-    Serial.println(F("  z = "));    //122"));
-    Serial.println(F("  "));
-    Serial.println(F("  "));
+    message_out.println(F("  "));
+    message_out.println(F("  "));
+    message_out.println(F("      PIXHAWK HELP MENU"));
+    message_out.println(F("      Enter the following letter"));
+    message_out.println(F("  -----------------------------"));
+    message_out.println(F("  a = ARM"));           //97
+    message_out.println(F("  b = AUTO MODE"));       //98
+    message_out.println(F("  c = ")); //99
+    message_out.println(F("  d = DIS-ARM"));         //100
+    message_out.println(F("  e = "));             //101
+    message_out.println(F("  f = Follow Mode"));           //102
+    message_out.println(F("  g = Guided Mode"));
+    message_out.println(F("  h = "));             //104
+    message_out.println(F("  i = "));          //105
+    message_out.println(F("  j = "));
+    message_out.println(F("  k = "));      //107
+    message_out.println(F("  l = "));           //108
+    message_out.println(F("  m = MANUAL Mode"));
+    message_out.println(F("  n = ACRO Mode"));
+    message_out.println(F("  o = "));             //111
+    message_out.println(F("  p = "));      //112
+    message_out.println(F("  q = Quit PIXHAWK Mode"));     //113
+    message_out.println(F("  r = "));    //114
+    message_out.println(F("  s = "));      //115
+    message_out.println(F("  t = "));
+    message_out.println(F("  u = "));
+    message_out.println(F("  v = "));       //118
+    message_out.println(F("  w = "));     //119
+    message_out.println(F("  x = "));       //120
+    message_out.println(F("  y = "));
+    message_out.println(F("  z = "));    //122"));
+    message_out.println(F("  "));
+    message_out.println(F("  "));
 
 
     delay(7000);
@@ -63,65 +63,65 @@ if (Command == 104) {                   // letter h
 
 if (Command == 97) {                   // letter a
     Command = 0;
-    Serial.println("");
-    Serial.println("ARMED");
-    Serial.println("");
+    message_out.println("");
+    message_out.println("ARMED");
+    message_out.println("");
     Command_long_ARM();
     }
 
 if (Command == 100) {                   // letter d
     Command = 0;
-    Serial.println("");
-    Serial.println("DIS-ARM");
-    Serial.println("");
+    message_out.println("");
+    message_out.println("DIS-ARM");
+    message_out.println("");
     Command_long_Disarm();
     }
 
 if (Command == 98) {                   // letter b
     Command = 0;
-    Serial.println("");
-    Serial.println("AUTO MODE");
-    Serial.println("");
+    message_out.println("");
+    message_out.println("AUTO MODE");
+    message_out.println("");
     Auto_Mode();
     }
 
 if (Command == 102) {                   // letter f
     Command = 0;
-    Serial.println("");
-    Serial.println("Follow MODE");
-    Serial.println("");
+    message_out.println("");
+    message_out.println("Follow MODE");
+    message_out.println("");
     Follow_Mode();
     }
 
 if (Command == 103) {                   // letter f
     Command = 0;
-    Serial.println("");
-    Serial.println("Guided MODE");
-    Serial.println("");
+    message_out.println("");
+    message_out.println("Guided MODE");
+    message_out.println("");
     Guided_Mode();
     }
 
 if (Command == 109) {                   // letter m
     Command = 0;
-    Serial.println("");
-    Serial.println("Manual MODE");
-    Serial.println("");
+    message_out.println("");
+    message_out.println("Manual MODE");
+    message_out.println("");
     Manual_Mode();
     }
 
 if (Command == 110) {                   // letter n
     Command = 0;
-    Serial.println("");
-    Serial.println("ACRO Mode");
-    Serial.println("");
+    message_out.println("");
+    message_out.println("ACRO Mode");
+    message_out.println("");
     Acro_Mode();
     }
 
 if (Command == 113) {                   // letter q
     Command = 0;
-      Serial.println("");
-      Serial.println("Mower set to ReP_AL Mode");
-      Serial.println("");
+      message_out.println("");
+      message_out.println("Mower set to ReP_AL Mode");
+      message_out.println("");
       Mower_Docked = 1;
       Mower_PIXHAWK = 0;
       }

@@ -34,8 +34,8 @@ void Print_Membrane_Switch_Input_Tests() {
      Menu_View = 0;
 
     
-      Serial.println();
-      Serial.println(F("Test Menu Activated"));
+      message_out.println();
+      message_out.println(F("Test Menu Activated"));
       Menu_Complete = false;                                // Menu complete will return to the normal loop
       lcd.clear();
       delay(5);
@@ -54,11 +54,11 @@ void Print_Membrane_Switch_Input_Tests() {
              
         if(!Start_Key_X){
           Menu_Complete = true;
-          Serial.println(F("Start key is pressed"));
+          message_out.println(F("Start key is pressed"));
           lcd.clear();
           }
         if(!Plus_Key_X) {
-          Serial.println(F("+ key is pressed"));
+          message_out.println(F("+ key is pressed"));
           Menu_View = Menu_View - 1;
           Run_Menu_Order_Testing();
           }
@@ -67,7 +67,7 @@ void Print_Membrane_Switch_Input_Tests() {
           Run_Menu_Order_Testing();
         }
         if(!Stop_Key_X){
-          Serial.println(F("Stop key is pressed"));
+          message_out.println(F("Stop key is pressed"));
           Menu_Complete = true;
           lcd.clear();
           lcd.setCursor(0,0);
@@ -86,7 +86,7 @@ void Print_Membrane_Switch_Input_Tests() {
  void Run_Menu_Order_Testing() {
      if (Menu_View > Max_Options_Test) Menu_View = Menu_View -1;
      if (Menu_View < 0) Menu_View = Menu_View + 1;
-     Serial.print(F("- key is pressed "));
+     message_out.print(F("- key is pressed "));
      lcd.clear();
      lcd.setCursor(1,0);
      Print_LCD_Menu_Tests(Menu_View);
@@ -95,10 +95,10 @@ void Print_Membrane_Switch_Input_Tests() {
      lcd.setCursor(0,0);
      lcd.print(F(">"));
      Menu_Mode_Selection = Menu_View;
-     Serial.print(F("Menu View : "));
-     Serial.print(Menu_View);
-     Serial.print(F("| Menu Selection"));
-     Serial.println(Menu_Mode_Selection);
+     message_out.print(F("Menu View : "));
+     message_out.print(Menu_View);
+     message_out.print(F("| Menu Selection"));
+     message_out.println(Menu_Mode_Selection);
      delay(100);
      }
 
@@ -111,7 +111,7 @@ void Activate_Menu_Option_Testing() {
        lcd.print(F("Wire Test"));
        lcd.setCursor(0,1);
        lcd.print(F("Activated"));
-       Serial.println(F("Perimeter Wire Test Started"));
+       message_out.println(F("Perimeter Wire Test Started"));
        delay(5000);
        lcd.clear();
        Menu_Mode_Selection = 0;
@@ -121,7 +121,7 @@ void Activate_Menu_Option_Testing() {
           Test_Mower_Check_Wire();
           Read_Membrane_Keys();
              if(!Stop_Key_X){
-             Serial.println(F("Stop key is pressed"));
+             message_out.println(F("Stop key is pressed"));
              Menu_Complete = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -150,7 +150,7 @@ void Activate_Menu_Option_Testing() {
           Test_Relay();
           Read_Membrane_Keys();
              if(!Stop_Key_X){
-             Serial.println(F("Stop key is pressed"));
+             message_out.println(F("Stop key is pressed"));
              Menu_Complete = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -205,7 +205,7 @@ void Activate_Menu_Option_Testing() {
           Test_Sonar_Array();
           Read_Membrane_Keys();
              if(!Stop_Key_X){
-             Serial.println(F("Stop key is pressed"));
+             message_out.println(F("Stop key is pressed"));
              Menu_Complete = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -220,7 +220,7 @@ void Activate_Menu_Option_Testing() {
       if (Menu_Mode_Selection == 6) {
         lcd.clear();
         lcd.print("Pattern Mow");
-        Serial.println(F("Slot 6 Selected"));
+        message_out.println(F("Slot 6 Selected"));
         Menu_Mode_Selection = 0;
         delay(3000);
         lcd.clear();
@@ -229,7 +229,7 @@ void Activate_Menu_Option_Testing() {
       if (Menu_Mode_Selection == 7) {
         lcd.clear();
         lcd.print("Volt Amps Test");
-        Serial.println(F("Volts and Amps Test"));
+        message_out.println(F("Volts and Amps Test"));
         Menu_Mode_Selection = 0;
         delay(1000);
         lcd.clear();
@@ -238,8 +238,8 @@ void Activate_Menu_Option_Testing() {
           Read_Membrane_Keys();
           Read_Serial1_Nano();
           delay(100);
-          Serial.print(F("  Charging:"));
-          Serial.print(Charging);
+          message_out.print(F("  Charging:"));
+          message_out.print(Charging);
           lcd.setCursor(0,0);
           lcd.print(F("Volt:"));
           lcd.print(Volts);
@@ -249,10 +249,10 @@ void Activate_Menu_Option_Testing() {
           lcd.setCursor(13,1);
           lcd.print(F("C:"));
           lcd.print(Charging);
-;          Serial.println(F(""));
+;          message_out.println(F(""));
         
              if(!Stop_Key_X){
-             Serial.println(F("Stop key is pressed"));
+             message_out.println(F("Stop key is pressed"));
              Menu_Complete = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -266,7 +266,7 @@ void Activate_Menu_Option_Testing() {
       if (Menu_Mode_Selection == 8) {
         lcd.clear();
         lcd.print("Compass Test");
-        Serial.println(F("Compass Test Selected"));
+        message_out.println(F("Compass Test Selected"));
         Menu_Mode_Selection = 0;
         delay(3000);
         lcd.clear();
@@ -280,10 +280,10 @@ void Activate_Menu_Option_Testing() {
           Read_Membrane_Keys();
           Get_Compass_Reading();
           delay(100);
-          Serial.print(F("Heading:"));
-          Serial.print(Heading);
-          Serial.print(F("|"));
-          Serial.println(F(""));
+          message_out.print(F("Heading:"));
+          message_out.print(Heading);
+          message_out.print(F("|"));
+          message_out.println(F(""));
           lcd.setCursor(9,0);
           lcd.print(Heading);
           lcd.setCursor(9,1);
@@ -291,7 +291,7 @@ void Activate_Menu_Option_Testing() {
           delay(500);
         
              if(!Stop_Key_X){
-             Serial.println(F("Stop key is pressed"));
+             message_out.println(F("Stop key is pressed"));
              Menu_Complete = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -309,7 +309,7 @@ void Activate_Menu_Option_Testing() {
       if (Menu_Mode_Selection == 9) {
         lcd.clear();
         lcd.print("Go Home Test");
-        Serial.println(F("Test Compass Turn to Home Test and Follow Wire"));
+        message_out.println(F("Test Compass Turn to Home Test and Follow Wire"));
         Menu_Mode_Selection = 0;
         delay(3000);
         lcd.clear();
@@ -323,7 +323,7 @@ void Activate_Menu_Option_Testing() {
         lcd.print("Bumper Bar");
         lcd.setCursor(0,1);
         lcd.print("Test");
-        Serial.println(F("Test Compass Turn to Home Test and Follow Wire"));
+        message_out.println(F("Test Compass Turn to Home Test and Follow Wire"));
         Menu_Mode_Selection = 0;
         delay(3000);
         lcd.clear();
@@ -337,7 +337,7 @@ void Activate_Menu_Option_Testing() {
         lcd.print("Wheel Amps");
         lcd.setCursor(0,1);
         lcd.print("Test");
-        Serial.println(F("Running Wheel Amp Test"));
+        message_out.println(F("Running Wheel Amp Test"));
         Menu_Mode_Selection = 0;
         delay(3000);
         Test_Wheel_Amps();
@@ -346,7 +346,7 @@ void Activate_Menu_Option_Testing() {
       if (Menu_Mode_Selection == 12) {
         lcd.clear();
         lcd.print("Gyro Test");
-        Serial.println(F("Gyro Test Selected"));
+        message_out.println(F("Gyro Test Selected"));
         Menu_Mode_Selection = 0;
         delay(3000);
         lcd.clear();
@@ -363,7 +363,7 @@ void Activate_Menu_Option_Testing() {
           Get_GYRO_Reading();
           Print_GYRO_Reading();
           delay(100);
-          Serial.println("");
+          message_out.println("");
           lcd.setCursor(2,0);
           lcd.print(GYRO_Angle_X);
           lcd.setCursor(11,0);
@@ -373,7 +373,7 @@ void Activate_Menu_Option_Testing() {
           delay(500);
 
              if(!Stop_Key_X){
-             Serial.println(F("Stop key is pressed"));
+             message_out.println(F("Stop key is pressed"));
              Menu_Complete = true;
              lcd.clear();
              lcd.setCursor(0,0);
@@ -388,7 +388,7 @@ void Activate_Menu_Option_Testing() {
       if (Menu_Mode_Selection == 14) {
         lcd.clear();
         lcd.print("BETA Commands");
-        Serial.println(F("BETA Section"));
+        message_out.println(F("BETA Section"));
         Menu_Mode_Selection = 0;
         delay(1000);
         lcd.clear();

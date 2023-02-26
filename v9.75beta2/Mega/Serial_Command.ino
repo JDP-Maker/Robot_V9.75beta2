@@ -9,9 +9,9 @@ void Check_Serial_Input() {
 
     // Print Comamnd to Serial Monitor
     if (Command != 0) {
-        Serial.print(F(""));
-        Serial.print(F(""));
-        Serial.println(Command);
+        message_out.print(F(""));
+        message_out.print(F(""));
+        message_out.println(Command);
         }
   }
 
@@ -24,40 +24,40 @@ void Execute_Serial_Command() {
 
 if (Command == 104) {                   // letter h
     Command = 0;
-    Serial.println(F("  "));
-    Serial.println(F("  "));
-    Serial.println(F("      ReP_AL Mower  HELP MENU"));
-    Serial.println(F("  "));
-    Serial.println(F("      Enter the following letter"));
-    Serial.println(F("  ------------------------------------"));
-    Serial.println(F("  a = "));           //97
-    Serial.println(F("  b = "));       //98
-    Serial.println(F("  c = Goto Charging Station")); //99
-    Serial.println(F("  d = Set to Docked"));         //100                
-    Serial.println(F("  e = Exit dock"));             //101
-    Serial.println(F("  f = Set Mower Mode to PIXHAK/ReP_AL"));           //102
-    Serial.println(F("  g = "));  //103
-    Serial.println(F("  h = Help Menu"));             //104
-    Serial.println(F("  i = Drill ON/OFF"));          //105
-    Serial.println(F("  j"));
-    Serial.println(F("  k = Test Drill Cycle"));      //107
-    Serial.println(F("  l = Spikes Down"));           //108
-    Serial.println(F("  m = Manuel Mode"));
-    Serial.println(F("  n"));
-    Serial.println(F("  o = Spikes UP"));             //111
-    Serial.println(F("  p = Pause/Park Mower"));      //112
-    Serial.println(F("  q = Quick Start Mower"));     //113
-    Serial.println(F("  r = Rain Sensor ON/OFF"));    //114
-    Serial.println(F("  s = "));      //115
-    Serial.println(F("  t = "));           //116
-    Serial.println(F("  u = "));     //117
-    Serial.println(F("  v = Fake Voltage of 12.6V"));       //118
-    Serial.println(F("  w = Fake Wire Signal ON/OFF"));		//119
-    Serial.println(F("  x = Mission start Pixhawk"));       //120
-    Serial.println(F("  y = Fake Wheel_Blocked_Count=4"));  //121
-    Serial.println(F("  z = Fake All Volts, Wheel Amps "));	//122"));
-    Serial.println(F("  "));
-    Serial.println(F("  "));
+    message_out.println(F("  "));
+    message_out.println(F("  "));
+    message_out.println(F("      ReP_AL Mower  HELP MENU"));
+    message_out.println(F("  "));
+    message_out.println(F("      Enter the following letter"));
+    message_out.println(F("  ------------------------------------"));
+    message_out.println(F("  a = "));           //97
+    message_out.println(F("  b = "));       //98
+    message_out.println(F("  c = Goto Charging Station")); //99
+    message_out.println(F("  d = Set to Docked"));         //100                
+    message_out.println(F("  e = Exit dock"));             //101
+    message_out.println(F("  f = Set Mower Mode to PIXHAK/ReP_AL"));           //102
+    message_out.println(F("  g = "));  //103
+    message_out.println(F("  h = Help Menu"));             //104
+    message_out.println(F("  i = Drill ON/OFF"));          //105
+    message_out.println(F("  j"));
+    message_out.println(F("  k = Test Drill Cycle"));      //107
+    message_out.println(F("  l = Spikes Down"));           //108
+    message_out.println(F("  m = Manuel Mode"));
+    message_out.println(F("  n"));
+    message_out.println(F("  o = Spikes UP"));             //111
+    message_out.println(F("  p = Pause/Park Mower"));      //112
+    message_out.println(F("  q = Quick Start Mower"));     //113
+    message_out.println(F("  r = Rain Sensor ON/OFF"));    //114
+    message_out.println(F("  s = "));      //115
+    message_out.println(F("  t = "));           //116
+    message_out.println(F("  u = "));     //117
+    message_out.println(F("  v = Fake Voltage of 12.6V"));       //118
+    message_out.println(F("  w = Fake Wire Signal ON/OFF"));		//119
+    message_out.println(F("  x = Mission start Pixhawk"));       //120
+    message_out.println(F("  y = Fake Wheel_Blocked_Count=4"));  //121
+    message_out.println(F("  z = Fake All Volts, Wheel Amps "));	//122"));
+    message_out.println(F("  "));
+    message_out.println(F("  "));
 
         
     delay(7000);   
@@ -87,9 +87,9 @@ if (Command == 101) {                   // letter e
 
 if (Command == 102) {                   // letter f
     Command = 0;
-    Serial.println("");
-    Serial.println(F("Mower set to PIXHAWK Mode"));
-    Serial.println("");
+    message_out.println("");
+    message_out.println(F("Mower set to PIXHAWK Mode"));
+    message_out.println("");
     Mower_Docked = 0;
     Mower_PIXHAWK = 1;
     }
@@ -102,8 +102,8 @@ if (Command == 105) {                   // letter i
 
     
     if (Drill_ON == 0) {
-      Serial.println(F(""));
-      Serial.println(F("Drill = ON"));
+      message_out.println(F(""));
+      message_out.println(F("Drill = ON"));
       Turn_On_Relay();
       delay(1000);
       Motor_Action_Spin_Drill();
@@ -113,8 +113,8 @@ if (Command == 105) {                   // letter i
     
     
     if ((Drill_ON == 1) && (Skip == 0)) {
-      Serial.println(F(""));
-      Serial.println(F("Drill = OFF"));
+      message_out.println(F(""));
+      message_out.println(F("Drill = OFF"));
       Motor_Action_Stop_Drill();
       Turn_Off_Relay();
       Drill_ON = 0;
@@ -154,8 +154,8 @@ if (Command == 111) {                   // letter o
       Spikes_Up();      
       Check_End_Stops();
       cycles ++;
-      Serial.print("Cycles:");
-      Serial.println(cycles);
+      message_out.print("Cycles:");
+      message_out.println(cycles);
       Check_Serial_Input();
       if (Command == 32) Stop = 1;
       }
@@ -182,8 +182,8 @@ if (Command == 108) {                   // letter l
       Spikes_Down();      
       Check_End_Stops();
       cycles ++;
-      Serial.print("Cycles:");
-      Serial.println(cycles);
+      message_out.print("Cycles:");
+      message_out.println(cycles);
       Check_Serial_Input();
       if (Command == 32) Stop = 1;
       }
@@ -210,7 +210,7 @@ if (Command == 112) {                   // letter p
 if (Command == 113) {                   // letter q  
     Command = 0;
     if (Mower_Docked == 1) {
-      Serial.println(F("Overriding Docked Status - Starting Mower"));
+      message_out.println(F("Overriding Docked Status - Starting Mower"));
       delay(2000);
       Mower_Docked = 0;
       }
@@ -222,11 +222,11 @@ if (Command == 114) {                   // letter r
     Command = 0;
     if (Rain_Sensor_Installed == 0) {
       Rain_Sensor_Installed = 1;
-      Serial.println(F("Rain Sensor Enabled = ON"));
+      message_out.println(F("Rain Sensor Enabled = ON"));
       }
     if (Rain_Sensor_Installed == 1) {
       Rain_Sensor_Installed = 0;
-      Serial.println(F("Rain Sensor Enabled = OFF"));
+      message_out.println(F("Rain Sensor Enabled = OFF"));
       }
     }
 
@@ -240,12 +240,12 @@ if (Command == 119) {                   // letter w
     bool Skip = 0;
     if (Fake_Wire == 0) {
       Fake_Wire = 1;
-      Serial.println(F("Fake_Wire Signal Enabled = ON"));
+      message_out.println(F("Fake_Wire Signal Enabled = ON"));
       Skip = 1;
       }
     if ((Fake_Wire == 1) && (Skip == 0)) {
       Fake_Wire = 0;
-      Serial.println(F("Fake_Wire Signal Enabled = OFF"));
+      message_out.println(F("Fake_Wire Signal Enabled = OFF"));
       }
     }
 
@@ -253,7 +253,7 @@ if (Command == 119) {                   // letter w
 if (Command == 120) {                   // letter x  
     Command = 0;
     if (Mower_Docked == 1) {
-      Serial.println(F("PIXHAWK Mission Start"));
+      message_out.println(F("PIXHAWK Mission Start"));
       delay(2000);
       Mower_Docked = 0;
       }
@@ -266,11 +266,11 @@ if (Command == 121) {                   // letter x
 
     if (!Fake_WheelAmp) {
     	Fake_WheelAmp = 1;
-    	Serial.println(F("Fake_WheelAmp Signal Enabled = ON"));
+    	message_out.println(F("Fake_WheelAmp Signal Enabled = ON"));
       }
     else if (Fake_WheelAmp) {
     	Fake_WheelAmp = 0;
-    	Serial.println(F("Fake_WheelAmp Signal Enabled = OFF"));
+    	message_out.println(F("Fake_WheelAmp Signal Enabled = OFF"));
     }
 }
 
@@ -280,30 +280,30 @@ if (Command == 122) {                   // letter v
 
     
     if (Fake_All_Settings == 0) {
-      Serial.println(F(""));
+      message_out.println(F(""));
       
       Wheel_Amp_Sensor_ON = 0;      
       Fake_All_Settings = 1;     
 
-      Serial.println(F(""));
-      Serial.println(F("Fake Volts Enabled = ON"));
-      Serial.println(F("Wheel Amp Sensor Disabled"));
-      Serial.println(F("Fake Settings ON !!!"));
-      Serial.println(F(""));
+      message_out.println(F(""));
+      message_out.println(F("Fake Volts Enabled = ON"));
+      message_out.println(F("Wheel Amp Sensor Disabled"));
+      message_out.println(F("Fake Settings ON !!!"));
+      message_out.println(F(""));
       Skip = 1;
       }
     
     
     if ((Fake_All_Settings == 1) && (Skip == 0)) {
-      Serial.println(F(""));
+      message_out.println(F(""));
       
       Perimeter_Wire_Enabled = 1;
       Wheel_Amp_Sensor_ON = 1;
       Fake_All_Settings = 0;
       
-      Serial.println(F(""));
-      Serial.println(F("All Sensors normal status"));
-      Serial.println(F(""));
+      message_out.println(F(""));
+      message_out.println(F("All Sensors normal status"));
+      message_out.println(F(""));
       }
     
 
@@ -362,19 +362,19 @@ if (Command == 57) { F_EN[32] = false; } // letter 9 x
 
 
 void Check_Mower_Status() {
-      Serial.println("");
-      Serial.print(F("Mower Status:  "));
-      Serial.print(F("Running ="));
-	  Serial.print(Mower_Running);
-      Serial.print(F("Parked ="));
-      Serial.print(Mower_Parked);
-      Serial.print(F(" | Docked = "));
-      Serial.print(Mower_Docked);
-      Serial.print(F(" | Tracking = "));
-      Serial.print(Tracking_Wire);
-      Serial.print(F(" |  Exit Dock = "));
-      Serial.print(Exiting_Dock);
-      Serial.print(F(" |  Error Value = "));
-      Serial.print(Mower_Error_Value);
-      Serial.println("");
+      message_out.println("");
+      message_out.print(F("Mower Status:  "));
+      message_out.print(F("Running ="));
+	  message_out.print(Mower_Running);
+      message_out.print(F("Parked ="));
+      message_out.print(Mower_Parked);
+      message_out.print(F(" | Docked = "));
+      message_out.print(Mower_Docked);
+      message_out.print(F(" | Tracking = "));
+      message_out.print(Tracking_Wire);
+      message_out.print(F(" |  Exit Dock = "));
+      message_out.print(Exiting_Dock);
+      message_out.print(F(" |  Error Value = "));
+      message_out.print(Mower_Error_Value);
+      message_out.println("");
       } 

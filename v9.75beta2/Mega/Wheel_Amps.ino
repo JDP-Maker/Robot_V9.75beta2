@@ -9,9 +9,9 @@ void Calculate_Wheel_Amps() {
  if (WheelAmps < 0) WheelAmps = WheelAmps * - 1;
  if (WheelAmps > 10) WheelAmps = 0;
  if (Fake_WheelAmp) WheelAmps = 4.0; // RVES added
- Serial.print(("WA:"));
- Serial.print(WheelAmps);
- Serial.print(F("|"));
+ message_out.print(("WA:"));
+ message_out.print(WheelAmps);
+ message_out.print(F("|"));
 
  }
 
@@ -25,16 +25,16 @@ void Check_Wheel_Amps() {
         if (WheelAmps >= Max_Wheel_Amps) {
             Wheel_Blocked_Count = Wheel_Blocked_Count + 1;
             if (Wheel_Blocked_Count > Wheel_Blocked_Count_Max) {    
-                Serial.println(F(""));
-                Serial.print(F("   Wheel Amps: "));
-                Serial.print(WheelAmps);
-                Serial.print(F("   Wheel Blocked Count: "));
-                Serial.print(Wheel_Blocked_Count);
-                Serial.print(F("   Max Wheel Amps: "));
-                Serial.println(Max_Wheel_Amps);                  
-                Serial.println(F(""));
-                Serial.println(F("!! Wheel_Blocked !!"));
-                Serial.print(F("|")); 
+                message_out.println(F(""));
+                message_out.print(F("   Wheel Amps: "));
+                message_out.print(WheelAmps);
+                message_out.print(F("   Wheel Blocked Count: "));
+                message_out.print(Wheel_Blocked_Count);
+                message_out.print(F("   Max Wheel Amps: "));
+                message_out.println(Max_Wheel_Amps);                  
+                message_out.println(F(""));
+                message_out.println(F("!! Wheel_Blocked !!"));
+                message_out.print(F("|")); 
                 Wheel_Blocked = 4;
                 Print_LCD_Wheel_Blocked(); // RVES added
 				#if not defined(NODELAY_BACKWARD)
@@ -58,19 +58,19 @@ void Check_Wheel_Amps() {
 
 void Test_Check_Wheel_Amps() {
 
-        Serial.print(F("   Wheel Amps: "));
-        Serial.print(WheelAmps);
-        Serial.print(F("   Wheel Blocked Count: "));
-        Serial.print(Wheel_Blocked_Count);
-        Serial.print(F("   Max Wheel Amps: "));
-        Serial.println(Max_Wheel_Amps);
+        message_out.print(F("   Wheel Amps: "));
+        message_out.print(WheelAmps);
+        message_out.print(F("   Wheel Blocked Count: "));
+        message_out.print(Wheel_Blocked_Count);
+        message_out.print(F("   Max Wheel Amps: "));
+        message_out.println(Max_Wheel_Amps);
         
         if (WheelAmps > Max_Wheel_Amps) {
             Wheel_Blocked_Count = Wheel_Blocked_Count + 1;
             if (Wheel_Blocked_Count > Wheel_Blocked_Count_Max) {
-                Serial.println(F(""));
-                Serial.print("!! Wheel_Blocked !!");
-                Serial.print(F("|")); 
+                message_out.println(F(""));
+                message_out.print("!! Wheel_Blocked !!");
+                message_out.print(F("|")); 
                 Wheel_Blocked = 4;
                 }
             }

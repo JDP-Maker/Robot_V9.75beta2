@@ -20,10 +20,11 @@
 //#define BOARD_DUE
 
 // Uncomment if using an LCD & Keypad     leave commented out to activate TFT.
-//#define LCD_KEYPAD
+#define LCD_KEYPAD		//JDP will see if both LCD and TFT will work at the same time
+						//JDP if you wonder why both, started with LCD and added TFT later
 
 // Uncomment if using the stop button over interrupt pin
-#define STOP_BTN
+//#define STOP_BTN					//JDP
 //#define NODELAY_BACKWARD			// Uncomment if using backward running without delay() function
 //#define WEBSERVER					    // Uncomment if using WebServer - show mower data on web page
 //#define WDT							      // Uncomment if using hardware watchdog timer - if MEGA freeze then restart itself to avoid still running
@@ -38,6 +39,8 @@
 #include "perimeter.h"
 #include <mavlink.h>
 #include <SoftwareSerial.h>
+
+#include "RemoteXY_WIFI.h"	//include for remotexy  Added by JDP
 
 SoftwareSerial Pixhawk_Serial(A10, A11);  // RX, TX
 
@@ -76,11 +79,11 @@ byte bcdToDec(byte val)
 #if defined(LCD_KEYPAD)
 	//Libraries for ic2 Liquid Crystal
 	#include <LiquidCrystal_I2C.h>
-	LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Enter the i2C address here lcd(_x__  e.g. lcd(0x27
+	//LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  //JDP Enter the i2C address here lcd(_x__  e.g. lcd(0x27
+	LiquidCrystal_I2C lcd(0x27, 20, 4); // JDP set the LCD address to 0x27
 	bool LCD_Screen_Keypad_Menu = 1;
-	bool TFT_Screen_Menu        = 0;
-	#else
-	
+	bool TFT_Screen_Menu        = 1;		//JDP I have both and they both worked in 9.0
+	#else	
 	bool LCD_Screen_Keypad_Menu = 0;
 	bool TFT_Screen_Menu        = 1;
 #endif
@@ -94,6 +97,20 @@ AlarmId id;
 #include <DFRobot_QMC5883.h>
 DFRobot_QMC5883 compass;
 
+// Added by JDP **********************************************************************************
+	// JDP I did a global find/replace and changed message_out.print to message_out.print
+	// JDP this allows me to direct print mesages to where ever I want
+	HardwareSerial & message_out = Serial;  	// JDP uncomment for print messages to normal serial
+	#define Baud 115200					  		// JDP uncomment for print messages to normal serial
+	//HardwareSerial & message_out = Serial1;   // JDP uncomment for print messages to serial1 
+	//#define Baud 115200						// JDP uncomment for print messages to serial1 
+	//HardwareSerial & message_out = Serial2;   // JDP uncomment for print messages to serial2 
+	//#define Baud 115200						// JDP uncomment for print messages to serial2 
+	//HardwareSerial & message_out = Serial13;   // JDP uncomment for print messages to serial3
+	//#define Baud 115200						// JDP uncomment for print messages to serial3
+// End add by JDP *********************************************************************************
+
+
 #if defined(WDT) and defined(BOARD_MEGA)
 	#include <avr/wdt.h>
 	bool wdt_enable_flagRun = false;
@@ -106,8 +123,8 @@ DFRobot_QMC5883 compass;
 #define pinLED LED_BUILTIN
 
 //GPS Fence Signal Pin
-#define GPS_Fence_Signal_Pin A7
-#define GPS_Lock_Pin A6
+#define GPS_Fence_Signal_Pin A7		// JDP OK for now but i think i may ues these pins for wheel current sense
+#define GPS_Lock_Pin A6				// JDP OK for now but i think i may ues these pins for wheel current sense
 
 //Real Time Clock Pins
 const int kCePin   = 29;  // RST
@@ -131,85 +148,86 @@ DS1302 rtc(kCePin, kIoPin, kSclkPin);
 
 
 #if defined(LCD_KEYPAD)
-	//Membrane Switch
-	#define Start_Key 50 //connect wire 1 to pin 2
-	#define Plus_Key 51  //connect wire 2 to pin 3
-	#define Minus_Key 52 //connect wire 3 to pin 4
-	#define Stop_Key 53  //connect wire 4 to pin 5
+//Membrane Switch
+#define Start_Key 50 //connect wire 1 to pin 2
+#define Plus_Key 51  //connect wire 2 to pin 3
+#define Minus_Key 52 //connect wire 3 to pin 4
+#define Stop_Key 53  //connect wire 4 to pin 5
 #endif
 
 #if defined(ROBOT_MOWER)
-  //Mower Pin Setup for the wheel Motor Bridge Controller
-  //Motor A
-  #define ENAPin 7              	// EN Pins need a digital pin with PWM
-  #define IN1Pin 22             	// JDP IN Pins dont need digital PWM
-  #define IN2Pin 23					//JDP
-  //Motor B
-  #if defined(STOP_BTN)
-  #define ENBPin 13                // EN Pins need a digital pin with PWM
-  #define IN3Pin 12                // IN Pins dont need digital PWM
-  #define IN4Pin 11
-  bool Stop_Button_Activated = false;  // true when STOP_BTN activated
-  #define StopBtn 2              // Emergency stop button - immediate stop using interrupt
-  #else
-  #define ENBPin 6                	// JDP EN Pins need a digital pin with PWM
-  #define IN3Pin 24                	// JDP IN Pins dont need digital PWM
-  #define IN4Pin 25					//JDP
-  #endif
-  //Motor Blades
-  #define RPWM 8
-  #define L_EN 27					//JDP
-  #define R_EN 28					//JDP
-  #define Relay_Blades_Brake_Resistor 3 //JDP 1 = brake active
+//Mower Pin Setup for the wheel Motor Bridge Controller
+//Motor A
+#define ENAPin 7              	// EN Pins need a digital pin with PWM
+#define IN1Pin 22             	// JDP IN Pins dont need digital PWM
+#define IN2Pin 23				// JDP they control direction (foward, reverse)
+//Motor B
+#if defined(STOP_BTN) 			// JDP stop btn needs interrupt, so remap motor B pins
+#define ENBPin 6               // JDP EN Pins need a digital pin with PWM
+#define IN3Pin 24               // JDP IN Pins dont need digital PWM
+#define IN4Pin 25				// JDP they control direction (foward, reverse)
+bool Stop_Button_Activated = false;  // true when STOP_BTN activated
+#define StopBtn 2              // Emergency stop button - immediate stop using interrupt
+#else
+#define ENBPin 6                	// JDP EN Pins need a digital pin with PWM
+#define IN3Pin 24                	// JDP IN Pins dont need digital PWM
+#define IN4Pin 25					// JDP they control direction (foward, reverse)
+#endif
+//Motor Blades
+#define RPWM 8					// JDP I use 3 mow motors all three are tied togather 
+#define L_EN 27					// JDP
+#define R_EN 28					// JDP
+#define Relay_Blades_Brake_Resistor 26 	// JDP not sure what this is?
+										// JDP my relay is wired opposite (high on.low off), so I will rewire so as not to have to change code
+										// could have stayed on pin 3, but 3 is interrupt, so move to 26
+#define PIXHAWK_LH_PWM 11    // MEGA D11
+#define PIXHAWK_RH_PWM 12    // MEGA D12
 
-  #define PIXHAWK_LH_PWM 11    // MEGA D11
-  #define PIXHAWK_RH_PWM 12    // MEGA D12
-
-  int Robot_Type                  = 1;
+int Robot_Type                  = 1;
 
 #endif
 
 #if defined(ROBOT_AERATOR)
-	
-	
-	//Motor A
-	#define ENAPin 5                // EN Pins need a digital pin with PWM
-	#define IN1Pin 40               // IN Pins dont need digital PWM
-	#define IN2Pin 41
-	//Motor B
-	#define ENBPin 4                // EN Pins need a digital pin with PWM
-	#define IN3Pin 42               // IN Pins dont need digital PWM
-	#define IN4Pin 43
-	//Motor C
-	#define ENCPin 3                // EN Pins need a digital pin with PWM
-	#define IN5Pin 44               // IN Pins dont need digital PWM
-	#define IN6Pin 45
-	//Motor D
-	#define ENDPin 2                // EN Pins need a digital pin with PWM
-	#define IN7Pin 48               // IN Pins dont need digital PWM
-	#define IN8Pin 49
-	//Motor Lift
-	#define ENEPin 6                // EN Pins need a digital pin with PWM
-	#define IN9Pin 32               // IN Pins dont need digital PWM
-	#define IN10Pin 33
-	//Motor Blades
-	#define RPWM 7                  // ENF On PCB
-	#define L_EN 27
-	#define R_EN 28
-	
-	#define PIXHAWK_LH_PWM 11        // MEGA D11
-	#define PIXHAWK_RH_PWM 12         // MEGA D12
-	
-	
-	int Robot_Type                  = 2;
-	
+
+
+//Motor A
+#define ENAPin 5                // EN Pins need a digital pin with PWM
+#define IN1Pin 40               // IN Pins dont need digital PWM
+#define IN2Pin 41
+//Motor B
+#define ENBPin 4                // EN Pins need a digital pin with PWM
+#define IN3Pin 42               // IN Pins dont need digital PWM
+#define IN4Pin 43
+//Motor C
+#define ENCPin 3                // EN Pins need a digital pin with PWM
+#define IN5Pin 44               // IN Pins dont need digital PWM
+#define IN6Pin 45
+//Motor D
+#define ENDPin 2                // EN Pins need a digital pin with PWM
+#define IN7Pin 48               // IN Pins dont need digital PWM
+#define IN8Pin 49
+//Motor Lift
+#define ENEPin 6                // EN Pins need a digital pin with PWM
+#define IN9Pin 32               // IN Pins dont need digital PWM
+#define IN10Pin 33
+//Motor Blades
+#define RPWM 7                  // ENF On PCB
+#define L_EN 27
+#define R_EN 28
+
+#define PIXHAWK_LH_PWM 11        // MEGA D11
+#define PIXHAWK_RH_PWM 12         // MEGA D12
+
+
+int Robot_Type                  = 2;
+
 #endif
 
 
 
 //Relay Switch
 #define Relay_Motors 26         //JDP be careful that you really use PIN24.  The order is sometimes labelled
-                                // so it looks like 24 is actually 22.
+// so it looks like 24 is actually 22.
 
 
 //Compass Level
@@ -297,8 +315,8 @@ int PIXHAWK_Mode;
 int Mower_RunBack; // when mower is go backward - at "1" due to Wire/GPS/Wheel Amp,  at "2" due to Sonar
 //bool Mower_RunBackSonar; // at "1" when mower is go backward
 #if defined(NODELAY_BACKWARD)
-	int Manouver_Turn_Around_Phase = 0; // used in function Manouver_Turn_Around() to control its flow
-	int Manouver_Turn_Around_Sonar_Phase = 0; // used in function Manouver_Turn_Around_sonar() to control its flow
+int Manouver_Turn_Around_Phase = 0; // used in function Manouver_Turn_Around() to control its flow
+int Manouver_Turn_Around_Sonar_Phase = 0; // used in function Manouver_Turn_Around_sonar() to control its flow
 #endif
 
 // Mower Running Data
@@ -392,16 +410,16 @@ int Alarm_2_Saved_EEPROM;
 int Alarm_3_Saved_EEPROM;
 
 String dayAsString(const Time::Day day) {
-    switch (day) {
-		case Time::kSunday: return "Sunday";
-		case Time::kMonday: return "Monday";
-		case Time::kTuesday: return "Tuesday";
-		case Time::kWednesday: return "Wednesday";
-		case Time::kThursday: return "Thursday";
-		case Time::kFriday: return "Friday";
-		case Time::kSaturday: return "Saturday";
-	}
-	return "(unknown day)";
+switch (day) {
+case Time::kSunday: return "Sunday";
+case Time::kMonday: return "Monday";
+case Time::kTuesday: return "Tuesday";
+case Time::kWednesday: return "Wednesday";
+case Time::kThursday: return "Thursday";
+case Time::kFriday: return "Friday";
+case Time::kSaturday: return "Saturday";
+}
+return "(unknown day)";
 }
 
 //Perimeter Wire Tracking
@@ -479,8 +497,8 @@ char tmp_str[7]; // temporary variable used in convert function
 
 // converts int16 to string. Moreover, resulting strings will have the same length in the debug monitor.
 char* convert_int16_to_str(int16_t i) { 
-	sprintf(tmp_str, "%6d", i);
-	return tmp_str;
+sprintf(tmp_str, "%6d", i);
+return tmp_str;
 }
 
 int minVal=265;
@@ -608,22 +626,22 @@ int Command;
 
 
 /***********************************************************************************************
-	
-	SETUP OF MOWER / Aerator
-	
-	The following setup parameters will setup the mower for your garden
-	Turn on or off the settings to defien how you like the mower to behave.
-	
-	Settings marked with EEPROM can be adjusted using the mower LCD menu.  Once changes and saved
-	the EEPROM settings will override the settings in this menu.  
-	
-	To clear these settings you need to clear the EEPROM
-    
-	1 = Turned ON      0 = Turned OFF       Value = Value set for variable.
-	
+
+SETUP OF MOWER / Aerator
+
+The following setup parameters will setup the mower for your garden
+Turn on or off the settings to defien how you like the mower to behave.
+
+Settings marked with EEPROM can be adjusted using the mower LCD menu.  Once changes and saved
+the EEPROM settings will override the settings in this menu.  
+
+To clear these settings you need to clear the EEPROM
+
+1 = Turned ON      0 = Turned OFF       Value = Value set for variable.
+
 ****************************************************************************************************/
 
-  char Version[16] = "V9.75JDP";
+char Version[16] = "V9.75JDP";
 
 bool PCB                        = 0;                          // USE Printed Circuit Board Relay
 
@@ -631,6 +649,10 @@ bool PCB                        = 0;                          // USE Printed Cir
 bool Use_NANO					  = 0;							// Use the Nano for battery info, rain and wheel amps JDP
 bool Use_MEGA_for_Analog_reads    = 1;							// Use the MEGA for battery info, rain and wheel amps JDP
 //JDP**********************************************************************************************************
+
+//******************* added by JDP ************************************************************************* 
+bool Use_ESP01_for_RemoteXY_WIFI  = 1;							// Use a ESP-01 for basic WIFI
+//**********************************************************************************************************
 
 bool Cutting_Blades_Activate    = 1;     // EEPROM            // Activates the cutting blades and disc in the code
 bool WIFI_Enabled               = 0;     // EEPROM            // Activates the WIFI Fucntions
@@ -686,64 +708,64 @@ int Line_Length_Cycles      = 25;        // length of the line mowed
 
 
 
-  // Safety Tilt Feature
-  int  Angle_Sensor_Enabled           = 0;      //EEPROM       // Prvents Mower from climibing steep hills
-  int  Tip_Over_Sensor_Enabled        = 0;      //EEPROM       // Turns mower off if turned over
+// Safety Tilt Feature
+int  Angle_Sensor_Enabled           = 0;      //EEPROM       // Prvents Mower from climibing steep hills
+int  Tip_Over_Sensor_Enabled        = 0;      //EEPROM       // Turns mower off if turned over
 
-  //Rain sensor 
-  bool Rain_Sensor_Installed          = 0;  //JDP EEPROM            // 1  = Rain sensor installed    0 = no sensor installed.
-  int  Rain_Total_Hits_Go_Home        = 10; //EEPROM            // This sensor only makes sense in combination with a mower docking station
-                                                                // as the mower is sent there to get out of the rain.
-  //Battery Settings
-  float Battery_Max               = 29.4;                       //JDP Max battery volts in Volts. 3S = 12.6V
-  float Battery_Min               = 21.0;   //JDP EEPROM            // Lower Limit of battery charge before re-charge required.
-  byte  Low_Battery_Detected      = 0;                          // Always set to 0
-  byte  Low_Battery_Instances_Chg = 14;     //EEPROM            // Instances of low battery detected before a re-charge is called..
-  float Amps_Charging_Setting     = 11.5;                        //JDP Set value at which charge is detected in Amps (normally between 0.5 and 0.8)  0.5 = my 330/LAM   0.8 = my LM
-  int   Volts_R2_Value            = 7500;                       // Set R2 vaklue in mower settings (usually between 6000 and 7500)  7100 = my 330   7500 = my LM   7000 = my LAM
+//Rain sensor 
+bool Rain_Sensor_Installed          = 0;  //JDP EEPROM            // 1  = Rain sensor installed    0 = no sensor installed.
+int  Rain_Total_Hits_Go_Home        = 10; //EEPROM            // This sensor only makes sense in combination with a mower docking station
+// as the mower is sent there to get out of the rain.
+//Battery Settings
+float Battery_Max               = 29.4;                       //JDP Max battery volts in Volts. 3S = 12.6V
+float Battery_Min               = 21.0;   //JDP EEPROM            // Lower Limit of battery charge before re-charge required.
+byte  Low_Battery_Detected      = 0;                          // Always set to 0
+byte  Low_Battery_Instances_Chg = 14;     //EEPROM            // Instances of low battery detected before a re-charge is called..
+float Amps_Charging_Setting     = 11.5;                        //JDP Set value at which charge is detected in Amps (normally between 0.5 and 0.8)  0.5 = my 330/LAM   0.8 = my LM
+int   Volts_R2_Value            = 7500;                       // Set R2 vaklue in mower settings (usually between 6000 and 7500)  7100 = my 330   7500 = my LM   7000 = my LAM
 
-  //Sonar Modules
-  bool Sonar_1_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 1
-  bool Sonar_2_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 2
-  bool Sonar_3_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 3
-  int  Max_Sonar_Hit              = 8;      //EEPROM            // Maximum number of Sonar hits before object is discovered
-  long maxdistancesonar           = 30;     //EEPROM            // distance in cm from the mower that the sonar will activate at.
-  int Sonar_Max_Error_Shutdown    = 5;
+//Sonar Modules
+bool Sonar_1_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 1
+bool Sonar_2_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 2
+bool Sonar_3_Activate           = 0;      //EEPROM            //JDP Activate (1) Deactivate (0) Sonar 3
+int  Max_Sonar_Hit              = 8;      //EEPROM            // Maximum number of Sonar hits before object is discovered
+long maxdistancesonar           = 30;     //EEPROM            // distance in cm from the mower that the sonar will activate at.
+int Sonar_Max_Error_Shutdown    = 5;
 
-  // Bumper Module
-  bool Bumper_Activate_Frnt       = 0;      //EEPROM            //JDP Activates the bumper bar on the front facia - defualt is off.  Enable in the LCD settings menu.
+// Bumper Module
+bool Bumper_Activate_Frnt       = 0;      //EEPROM            //JDP Activates the bumper bar on the front facia - defualt is off.  Enable in the LCD settings menu.
 
-  //Wheel Motors Setup
-  bool Ramp_Motor_ON             = 0;		//JDP
-  
-  int Max_Cycles_Straight        = 1250;    //EEPROM            // Number of loops the Sketch will run before the mower just turns around anyway. Adjust according to your garden length
-  int PWM_MaxSpeed_LH            = 255;     //EEPROM            // Straight line speed LH Wheel (Looking from back of mower)  Will be overidden if saved in EEPROM
-  int PWM_MaxSpeed_RH            = 255;     //EEPROM            // Straight line speed RH Wheel - adjust to keep mower tracking straight.  Will be overridden if saved in EEPROM
-  bool Wheels_Activate           = 0;       //EEPROM            // Wheels ON/OFF - for testing
+//Wheel Motors Setup
+bool Ramp_Motor_ON             = 0;		//JDP
 
-  bool MAG_Speed_Adjustment      = 0;   //** Experimental
-  int Slow_Speed_MAG             = -900;                        // MAG Value that Slow Speed Kicks In
-  int PWM_Slow_Speed_LH          = 160;                         // Straight line speed when the mower is almost over the wire Left Wheel.
-  int PWM_Slow_Speed_RH          = 175;                         // Straight line speed when the mower is almost over the wire Right Wheel.
-  
-  int Mower_Turn_Delay_Min       = 1000;    //EEPROM            // Min Max Turn time of the Mower after it reverses at the wire. 1000 = 1 second
-  int Mower_Turn_Delay_Max       = 2500;    //EEPROM            // A random turn time between these numbers is selected by the software
-  int Mower_Reverse_Delay        = 1800;    //EEPORM            // Time the mower reverses before making a turn.
+int Max_Cycles_Straight        = 1250;    //EEPROM            // Number of loops the Sketch will run before the mower just turns around anyway. Adjust according to your garden length
+int PWM_MaxSpeed_LH            = 255;     //EEPROM            // Straight line speed LH Wheel (Looking from back of mower)  Will be overidden if saved in EEPROM
+int PWM_MaxSpeed_RH            = 255;     //EEPROM            // Straight line speed RH Wheel - adjust to keep mower tracking straight.  Will be overridden if saved in EEPROM
+bool Wheels_Activate           = 0;       //EEPROM            // Wheels ON/OFF - for testing
 
-  bool Wheel_Amp_Sensor_ON       = 0;                           // Measures the amps in the wheel motor to detect blocked wheels.
-  float Max_Wheel_Amps           = 3.5;                         // Maximum amperage allowed in the wheels before a blockage is called.
-  int  Wheel_Blocked_Count_Max   = 3;                           // Number of times the wheels blocked are sensed before a reverse action takes place.
+bool MAG_Speed_Adjustment      = 0;   //** Experimental
+int Slow_Speed_MAG             = -900;                        // MAG Value that Slow Speed Kicks In
+int PWM_Slow_Speed_LH          = 160;                         // Straight line speed when the mower is almost over the wire Left Wheel.
+int PWM_Slow_Speed_RH          = 175;                         // Straight line speed when the mower is almost over the wire Right Wheel.
 
-      
+int Mower_Turn_Delay_Min       = 1000;    //EEPROM            // Min Max Turn time of the Mower after it reverses at the wire. 1000 = 1 second
+int Mower_Turn_Delay_Max       = 2500;    //EEPROM            // A random turn time between these numbers is selected by the software
+int Mower_Reverse_Delay        = 1800;    //EEPORM            // Time the mower reverses before making a turn.
 
-  //Blade Motor Setup
-  //Blade Speed can be modified in the settings menu and will be written to EEPROM
-  //The number below will then be overidden
-  int PWM_Blade_Speed            = 250;     //EEPROM           // PWM signal sent to the blade motor (speed of blade) new motor works well at 245.
+bool Wheel_Amp_Sensor_ON       = 0;                           // Measures the amps in the wheel motor to detect blocked wheels.
+float Max_Wheel_Amps           = 3.5;                         // Maximum amperage allowed in the wheels before a blockage is called.
+int  Wheel_Blocked_Count_Max   = 3;                           // Number of times the wheels blocked are sensed before a reverse action takes place.
 
-  // Alarm Setup
-  bool Set_Time                   = 0;       //EEPROM           // Turn to 1 to set time on RTC (Set time in Time tab Set_Time_On_RTC)  After setting time turn to 0 and reload sketch.
-                                                                // Not needed if setting time in the TFT Menu
+
+
+//Blade Motor Setup
+//Blade Speed can be modified in the settings menu and will be written to EEPROM
+//The number below will then be overidden
+int PWM_Blade_Speed            = 250;     //EEPROM           // PWM signal sent to the blade motor (speed of blade) new motor works well at 245.
+
+// Alarm Setup
+bool Set_Time                   = 0;       //EEPROM           // Turn to 1 to set time on RTC (Set time in Time tab Set_Time_On_RTC)  After setting time turn to 0 and reload sketch.
+// Not needed if setting time in the TFT Menu
 
 
 
@@ -846,12 +868,12 @@ byte Alarm_Second               = 5;                            // Seconds
 
 
 /* Description of how the below values are displayed in the Serial Monitor Print Out for the wire
-	function
-	(InMax)                   Wire = 0                 (OutMax)
-	|      (InMid)           |           (OutMid)     |
-	|--------|--------|------|------|--------|--------|
-	|        |        |      |      |        |        |
-	(InMin)       (OutMin)
+function
+(InMax)                   Wire = 0                 (OutMax)
+|      (InMid)           |           (OutMid)     |
+|--------|--------|------|------|--------|--------|
+|        |        |      |      |        |        |
+(InMin)       (OutMin)
 */
 
 // Wire detection Values
@@ -887,10 +909,10 @@ bool Show_TX_Data                   = 0;                      // Show the values
 // struct for timer function in general.ino file
 struct timerVar_t
 {
-	signed long ACC = 0;
-	signed long REF = (signed long)millis(); // 0 -origin
-	int PRE;
-	bool flagRun = 0;
+signed long ACC = 0;
+signed long REF = (signed long)millis(); // 0 -origin
+int PRE;
+bool flagRun = 0;
 };
 timerVar_t T1, T2, T_MTA_ph2, T_MTA_ph4, T_MTA_ph5, T_MTA_ph7, T_MTAS_ph2, T_MTAS_ph4, T_MTAS_ph5, T_MTAS_ph7
 ;
@@ -901,173 +923,173 @@ bool F_EN[33]; // Blocking bit for quick enable/ disable function
 
 
 void setup() {
-	Serial.begin(115200);
-	//******************* added by JDP ************************************************************************* 
-	if (Use_NANO == 1) {					// JDP
-		Serial1.begin(57600);				// Open Serial port 1 for the nano communication JDP
-		SerialCom1.begin ();				// JDP
-	}
-	//  Serial1.begin(57600);				// JDP Open Serial port 1 for the nano communication
-	
-	SerialCom1.begin ();
-	if (WIFI_Enabled == true) { 
-		Serial2.begin(57600);					// If WIFI is on open Serial port 2 for the NodeMCU communication
-		SerialCom2.begin ();
-	}
-	Wire.begin();                                           // start the i2c interface
-	Serial.println(F(" "));
-	Serial.println(F(" "));  
-	if (Robot_Type == 1) Serial.print(F("ReP_AL Robot Lawn Mower :"));
-	if (Robot_Type == 2) Serial.print(F("ReP_AL Robot Aerator:"));
-	Serial.println(Version);  
-	Serial.println(F("==================="));
-	Serial.println(F(""));
-	Serial.println(F("Starting Mower Setup"));
-	Serial.println(F("==================="));
-	
-	if (TFT_Screen_Menu == 1) {
-		Serial3.begin(57600);
-		SerialCom3.begin ();
-		Serial.println(F("TFT Screen activated"));
-	}
-	/*if (LCD_Screen_Keypad_Menu == 1) {
-		Serial3.begin(9600);          // 1200 before
-		Serial.println(F("LCD Keypad activated"));
-	}*/
-	
-	Alarm_1_ON = 0;
-	Alarm_2_ON = 0;
-	Alarm_3_ON = 0;
-	Serial.println(F(""));
-	
-	//Clear_EERPOM();
-	
-	#if defined(BOARD_DUE) 
-		Serial.println("BOARD = DUE");
-		Load_dueFlashStorage_Saved_Data();
-	#endif
-	
-	#if defined(BOARD_MEGA)
-		Serial.println("BOARD = MEGA");
-		Load_EEPROM_Saved_Data();
-	#endif
-	
-	Serial.println(F(""));
-	Serial.print(F("Volts R2 Value = "));
-	Serial.print(Volts_R2_Value);
-	Serial.print(F("  Charging Set to = "));
-	Serial.print(Amps_Charging_Setting);
-	Serial.println(F(" Amps"));
-	
-	// If the manuel set time is switched on
-	if (Set_Time == 1 ) {
-		Serial.println(F("Setting Time"));
-		if (PCB == 0) Manual_Set_Time_On_DS1302();
-		if (PCB == 1) Manual_Set_Time_DS3231();
-	}
-	if (PCB == 0) DisplayTime_DS1302();
-	if (PCB == 1) Display_DS3231_Time();
-	
-	Serial.println(F(""));
-	Prepare_Mower_from_Settings();
-	
-	#if defined(LCD_KEYPAD)
-		Setup_Run_LCD_Intro ();
-		Setup_Membrane_Buttons();
-	#endif  
-	
-	Setup_DFRobot_QMC5883_HMC5883L_Compass();                     // USes the DFRobot Library
-	Setup_Gyro();
-	delay(100);
-	Setup_Relays();
-	Setup_Tilt_Tip_Safety();
-	Setup_Motor_Pins();
-	Setup_ADCMan();
-	Setup_Check_Pattern_Mow();
-	if (Bumper_Activate_Frnt == true) Setup_Microswitches();
-	if ((GPS_Enabled == 1) && (GPS_Type == 2)) Setup_PIXHAWK();
-	
-	for(int i=0; i<33; i++) { F_EN[i] = true; } // for CT debug
+Serial.begin(115200);
+//******************* added by JDP ************************************************************************* 
+if (Use_NANO == 1) {					// JDP
+Serial1.begin(57600);				// Open Serial port 1 for the nano communication JDP
+SerialCom1.begin ();				// JDP
+}
+//  Serial1.begin(57600);				// JDP Open Serial port 1 for the nano communication
+
+SerialCom1.begin ();
+if (WIFI_Enabled == true) { 
+Serial2.begin(57600);					// If WIFI is on open Serial port 2 for the NodeMCU communication
+SerialCom2.begin ();
+}
+Wire.begin();                                           // start the i2c interface
+message_out.println(F(" "));
+message_out.println(F(" "));  
+if (Robot_Type == 1) message_out.print(F("ReP_AL Robot Lawn Mower :"));
+if (Robot_Type == 2) message_out.print(F("ReP_AL Robot Aerator:"));
+message_out.println(Version);  
+message_out.println(F("==================="));
+message_out.println(F(""));
+message_out.println(F("Starting Mower Setup"));
+message_out.println(F("==================="));
+
+if (TFT_Screen_Menu == 1) {
+Serial3.begin(57600);
+SerialCom3.begin ();
+message_out.println(F("TFT Screen activated"));
+}
+/*if (LCD_Screen_Keypad_Menu == 1) {
+Serial3.begin(9600);          // 1200 before
+message_out.println(F("LCD Keypad activated"));
+}*/
+
+Alarm_1_ON = 0;
+Alarm_2_ON = 0;
+Alarm_3_ON = 0;
+message_out.println(F(""));
+
+//Clear_EERPOM();
+
+#if defined(BOARD_DUE) 
+message_out.println("BOARD = DUE");
+Load_dueFlashStorage_Saved_Data();
+#endif
+
+#if defined(BOARD_MEGA)
+message_out.println("BOARD = MEGA");
+Load_EEPROM_Saved_Data();
+#endif
+
+message_out.println(F(""));
+message_out.print(F("Volts R2 Value = "));
+message_out.print(Volts_R2_Value);
+message_out.print(F("  Charging Set to = "));
+message_out.print(Amps_Charging_Setting);
+message_out.println(F(" Amps"));
+
+// If the manuel set time is switched on
+if (Set_Time == 1 ) {
+message_out.println(F("Setting Time"));
+if (PCB == 0) Manual_Set_Time_On_DS1302();
+if (PCB == 1) Manual_Set_Time_DS3231();
+}
+if (PCB == 0) DisplayTime_DS1302();
+if (PCB == 1) Display_DS3231_Time();
+
+message_out.println(F(""));
+Prepare_Mower_from_Settings();
+
+#if defined(LCD_KEYPAD)
+Setup_Run_LCD_Intro ();
+Setup_Membrane_Buttons();
+#endif  
+
+Setup_DFRobot_QMC5883_HMC5883L_Compass();                     // USes the DFRobot Library
+Setup_Gyro();
+delay(100);
+Setup_Relays();
+Setup_Tilt_Tip_Safety();
+Setup_Motor_Pins();
+Setup_ADCMan();
+Setup_Check_Pattern_Mow();
+if (Bumper_Activate_Frnt == true) Setup_Microswitches();
+if ((GPS_Enabled == 1) && (GPS_Type == 2)) Setup_PIXHAWK();
+
+for(int i=0; i<33; i++) { F_EN[i] = true; } // for CT debug
 }
 
 void loop() {
-	
-	Get_Current_Time_Print_On_Serial_Monitor();
-	if (Mower_PIXHAWK == 0) Check_Serial_Input();
-	if (Mower_PIXHAWK == 1) Check_Serial_Input_PIXHAWK();
-	#if defined(STOP_BTN)
-		Stop_Button_Action();
-	#endif
-	
-	if (TFT_Screen_Menu == 1)                                 Check_TFT_Serial_Input();   // Check the TFT Serial for any input command.
-	if ((TFT_Screen_Menu == 1) && (TFT_Menu_Command > 1))     Activate_TFT_Menu();        // If TFT Menu has requested an input, TX or RX that input.
-	
-	
-	// Read the Serial Ports for Data
-	//******************* added by JDP ************************************************************************* 
-	if (Use_NANO == 1)		Read_Serial1_Nano();       			// JDP Read the Serial data from the nano
-	if (Use_MEGA_for_Analog_reads == 1)  Read_Bat_Rain_Wheel(); // JDP Read Battery volts, amps, Rain sensor, and Wheel Amps Directly with MEGA
-	// JDP********************************************************************************
-	// Read_Serial1_Nano();										// JDP Read the Serial data from the nano
-	Print_Mower_Status();                                       // Update the Serial monitor with the current mower status.
-	
-	
-	// Mower is docked, docking station is enabled and waiting for a command to leave and mow.
-	if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Volt_Info();                                  // Print the voltage to the LCD screen
-	if  (Mower_Docked == 1)                                           Check_if_Charging();
-	if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Docked();                                // Print information to the LCD screen
-	if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_Time_On_LCD();
-	if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Docked();                   // Check the membrane buttons for any input
-	if  (Mower_Docked == 1)                                           Running_Test_for_Boundary_Wire();                       // Test is the boundary wire is live
-	if  (Mower_Docked == 1)                                           Manouver_Dock_The_Mower();
-	if  (Mower_Docked == 1)                                           Display_Next_Alarm();
-	if  (Mower_Docked == 1)                                           Activate_Alarms();
-	if ((Mower_Docked == 1) && (TFT_Screen_Menu == 1))                Send_Mower_Docked_Data();                               // Send Data to TFT Display
-	
-	
-	// Mower is Parked ready to be started / re-started / or the mower has no docking station enabled.
-	if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Volt_Info();                                  // Print the voltage to the LCD screen
-	if (Mower_Parked == 1)                                            Check_if_Charging();
-	if (Mower_Parked == 1)                                            Check_if_Raining_From_Nano ();                          // Checks if the water sensor detects Rain
-	if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Parked();                                // Print information to the LCD screen
-	if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Parked();                   // Check the membrane buttons for any input
-	if ((Mower_Parked == 1) && (GPS_Enabled == 1) && (GPS_Type == 1)) Check_GPS_In_Out();
-	if (Mower_Parked == 1)                                            Running_Test_for_Boundary_Wire();
-	if (Mower_Parked == 1)                                            Manouver_Park_The_Mower();
-	if ((Mower_Parked == 1) && (TFT_Screen_Menu == 1))                Send_Mower_Docked_Data();                               // Send Data to TFT Display
-	
-	
-	// Mower is Parked with Low Battery needing manuel charging
-	if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Print_LCD_Volt_Info();                                  // Print the battery voltage
-	if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Print_Recharge_LCD();                                   // Print re-charge on the LCD screen
-	if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Check_Membrane_Switch_Input_Parked();
-	// Lost mower is put into standby mode
-	
-	if ((Mower_Error == 1)  && (LCD_Screen_Keypad_Menu == 1))         Print_Mower_Error();                     // Safety mode incase the mower is lostor in an error state
-	if ((Mower_Error == 1)  && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Parked();
-	if ((Mower_Error == 1)  && (TFT_Screen_Menu == 1))                Send_Mower_Error_Data();                               // Send Data to TFT Display
-	
-	
-	// Mower is running cutting the grass.
-	if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                                                                Print_LCD_Volt_Info();              // Print the voltage to the LCD screen
-	if  (Mower_Running == 1)                                                                                                  Process_Volt_Information();         // Take action based on the voltage readings
-	if  (Mower_Running == 1 && Mower_RunBack == 0)                                                                            Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
-	if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                                                                Check_Membrane_Keys_Running();      // Check to see if the mower needs to be stopped via keypad
-	if  (Mower_Running == 1 && Mower_RunBack == 0)                                                                            Check_Timed_Mow();                  // Check to see if the time to go home has come.
-	if  (Mower_Running == 1 && Mower_RunBack == 0)                                                                            Running_Test_for_Boundary_Wire();   // Test is the boundary wire is live
-	if  (Mower_Running == 1)                                                                                                  Check_Tilt_Tip_Angle();             // Tests to see if the mower is overturned.
-	if ((Mower_Running == 1) && (Wheel_Amp_Sensor_ON == 1)/* && Mower_RunBack == 0*/)                                         Check_Wheel_Amps();                 // Tests to see if the wheels are blocked.
-	if ((Mower_Running == 1) && (Wire_Detected == 1) && Mower_RunBack == 0)                                                   Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
-	if ((Mower_Running == 1) && (GPS_Enabled == 1) && (GPS_Type == 1) && Mower_RunBack == 0)                                  Check_GPS_In_Out();                 // Test is the GPS Fence has been crossed
-	if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && Mower_RunBack == 0)                            Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
-	if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0) && Mower_RunBack == 0)        Manouver_Mow_Aerate_The_Grass();    // Inputs to the wheel motors / blade motors according to surroundings
-	if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0) && Mower_RunBack == 0)        Check_Bumper();                     // If the mower is  the boundary wire check the Bumper for activation
-	#if not defined(NODELAY_BACKWARD)
-		if ((Mower_Running == 1) && (Wire_Detected == 1) && ((Outside_Wire == 1) || (Bumper == 1))  && (Loop_Cycle_Mowing > 0))   Manouver_Turn_Around();             // If the bumper is activated or the mower is outside the boundary wire turn around
-		#else
-		if ((Mower_Running == 1) && (Wire_Detected == 1) &&
-		((Outside_Wire == 1) || (Bumper == 1) || (Wheel_Blocked == 4))  && (Loop_Cycle_Mowing > 0))   						  Manouver_Turn_Around();             // If the bumper is activated or the mower is outside the boundary wire turn around
-	#endif // -(NODELAY_BACKWARD)-
+
+Get_Current_Time_Print_On_Serial_Monitor();
+if (Mower_PIXHAWK == 0) Check_Serial_Input();
+if (Mower_PIXHAWK == 1) Check_Serial_Input_PIXHAWK();
+#if defined(STOP_BTN)
+Stop_Button_Action();
+#endif
+
+if (TFT_Screen_Menu == 1)                                 Check_TFT_Serial_Input();   // Check the TFT Serial for any input command.
+if ((TFT_Screen_Menu == 1) && (TFT_Menu_Command > 1))     Activate_TFT_Menu();        // If TFT Menu has requested an input, TX or RX that input.
+
+
+// Read the Serial Ports for Data
+//******************* added by JDP ************************************************************************* 
+if (Use_NANO == 1)		Read_Serial1_Nano();       			// JDP Read the Serial data from the nano
+if (Use_MEGA_for_Analog_reads == 1)  Read_Bat_Rain_Wheel(); // JDP Read Battery volts, amps, Rain sensor, and Wheel Amps Directly with MEGA
+// JDP********************************************************************************
+// Read_Serial1_Nano();										// JDP Read the Serial data from the nano
+Print_Mower_Status();                                       // Update the Serial monitor with the current mower status.
+
+
+// Mower is docked, docking station is enabled and waiting for a command to leave and mow.
+if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Volt_Info();                                  // Print the voltage to the LCD screen
+if  (Mower_Docked == 1)                                           Check_if_Charging();
+if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Docked();                                // Print information to the LCD screen
+if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_Time_On_LCD();
+if ((Mower_Docked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Docked();                   // Check the membrane buttons for any input
+if  (Mower_Docked == 1)                                           Running_Test_for_Boundary_Wire();                       // Test is the boundary wire is live
+if  (Mower_Docked == 1)                                           Manouver_Dock_The_Mower();
+if  (Mower_Docked == 1)                                           Display_Next_Alarm();
+if  (Mower_Docked == 1)                                           Activate_Alarms();
+if ((Mower_Docked == 1) && (TFT_Screen_Menu == 1))                Send_Mower_Docked_Data();                               // Send Data to TFT Display
+
+
+// Mower is Parked ready to be started / re-started / or the mower has no docking station enabled.
+if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Volt_Info();                                  // Print the voltage to the LCD screen
+if (Mower_Parked == 1)                                            Check_if_Charging();
+if (Mower_Parked == 1)                                            Check_if_Raining_From_Nano ();                          // Checks if the water sensor detects Rain
+if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Print_LCD_Info_Parked();                                // Print information to the LCD screen
+if ((Mower_Parked == 1) && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Parked();                   // Check the membrane buttons for any input
+if ((Mower_Parked == 1) && (GPS_Enabled == 1) && (GPS_Type == 1)) Check_GPS_In_Out();
+if (Mower_Parked == 1)                                            Running_Test_for_Boundary_Wire();
+if (Mower_Parked == 1)                                            Manouver_Park_The_Mower();
+if ((Mower_Parked == 1) && (TFT_Screen_Menu == 1))                Send_Mower_Docked_Data();                               // Send Data to TFT Display
+
+
+// Mower is Parked with Low Battery needing manuel charging
+if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Print_LCD_Volt_Info();                                  // Print the battery voltage
+if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Print_Recharge_LCD();                                   // Print re-charge on the LCD screen
+if ((Mower_Parked_Low_Batt == 1) && (LCD_Screen_Keypad_Menu == 1)) Check_Membrane_Switch_Input_Parked();
+// Lost mower is put into standby mode
+
+if ((Mower_Error == 1)  && (LCD_Screen_Keypad_Menu == 1))         Print_Mower_Error();                     // Safety mode incase the mower is lostor in an error state
+if ((Mower_Error == 1)  && (LCD_Screen_Keypad_Menu == 1))         Check_Membrane_Switch_Input_Parked();
+if ((Mower_Error == 1)  && (TFT_Screen_Menu == 1))                Send_Mower_Error_Data();                               // Send Data to TFT Display
+
+
+// Mower is running cutting the grass.
+if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                                                                Print_LCD_Volt_Info();              // Print the voltage to the LCD screen
+if  (Mower_Running == 1)                                                                                                  Process_Volt_Information();         // Take action based on the voltage readings
+if  (Mower_Running == 1 && Mower_RunBack == 0)                                                                            Check_if_Raining_From_Nano();       // Test the rain sensor for rain. If detected sends the mower home
+if ((Mower_Running == 1) && (LCD_Screen_Keypad_Menu == 1))                                                                Check_Membrane_Keys_Running();      // Check to see if the mower needs to be stopped via keypad
+if  (Mower_Running == 1 && Mower_RunBack == 0)                                                                            Check_Timed_Mow();                  // Check to see if the time to go home has come.
+if  (Mower_Running == 1 && Mower_RunBack == 0)                                                                            Running_Test_for_Boundary_Wire();   // Test is the boundary wire is live
+if  (Mower_Running == 1)                                                                                                  Check_Tilt_Tip_Angle();             // Tests to see if the mower is overturned.
+if ((Mower_Running == 1) && (Wheel_Amp_Sensor_ON == 1)/* && Mower_RunBack == 0*/)                                         Check_Wheel_Amps();                 // Tests to see if the wheels are blocked.
+if ((Mower_Running == 1) && (Wire_Detected == 1) && Mower_RunBack == 0)                                                   Check_Wire_In_Out();                // Test if the mower is in or out of the wire fence.
+if ((Mower_Running == 1) && (GPS_Enabled == 1) && (GPS_Type == 1) && Mower_RunBack == 0)                                  Check_GPS_In_Out();                 // Test is the GPS Fence has been crossed
+if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && Mower_RunBack == 0)                            Check_Sonar_Sensors();              // If the mower is  the boundary wire check the sonars for obsticles and prints to the LCD
+if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0) && Mower_RunBack == 0)        Manouver_Mow_Aerate_The_Grass();    // Inputs to the wheel motors / blade motors according to surroundings
+if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 0) && Mower_RunBack == 0)        Check_Bumper();                     // If the mower is  the boundary wire check the Bumper for activation
+#if not defined(NODELAY_BACKWARD)
+if ((Mower_Running == 1) && (Wire_Detected == 1) && ((Outside_Wire == 1) || (Bumper == 1))  && (Loop_Cycle_Mowing > 0))   Manouver_Turn_Around();             // If the bumper is activated or the mower is outside the boundary wire turn around
+#else
+if ((Mower_Running == 1) && (Wire_Detected == 1) &&
+((Outside_Wire == 1) || (Bumper == 1) || (Wheel_Blocked == 4))  && (Loop_Cycle_Mowing > 0))   						  Manouver_Turn_Around();             // If the bumper is activated or the mower is outside the boundary wire turn around
+#endif // -(NODELAY_BACKWARD)-
 if ((Mower_Running == 1) && (GPS_Enabled == 1) && (GPS_Type == 1) && (GPS_Inside_Fence == 0))					          Manouver_Turn_Around();             // If the GPS Fence is activated Turn Around
 if ((Mower_Running == 1) && (Wire_Detected == 1) && (Outside_Wire == 0) && (Sonar_Hit == 1))                              Manouver_Turn_Around_Sonar();       // If sonar hit is detected and mower is  the wire, manouver around obsticle
 #if defined(NODELAY_BACKWARD)
@@ -1093,7 +1115,7 @@ if (Manuel_Mode == 0)                 			  Get_WIFI_Commands();                 
 
 RuntimeMeasuring(); // loop cycle time measuring
 
-Serial.println();
+message_out.println();
 //Check_Sonar_Sensors();
 MEGA_WDT(); // watchdog timer function
 }  // End Loop

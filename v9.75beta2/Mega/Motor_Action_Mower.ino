@@ -36,7 +36,7 @@ void Motor_Action_Go_Full_Speed()     {
 #endif
 
     Wheel_Status_Value = 1;
-    Serial.print(F("Wheel:FULL|"));
+    message_out.print(F("Wheel:FULL|"));
   }
 
   // If Ramp up is achieved just go full speed
@@ -57,13 +57,13 @@ void Motor_Action_Go_Full_Speed()     {
 #endif
 
     Wheel_Status_Value = 2;
-    Serial.print(F("Wheel:R-FULL|"));
+    message_out.print(F("Wheel:R-FULL|"));
   }
 
   // Ramp motor option
   if ((Ramp_Motor_ON == 1) && (Full_Speed_Achieved == 0)) {
 
-    Serial.print(F("|WRamp: "));
+    message_out.print(F("|WRamp: "));
     int Motor_Step = 150;
 
     while (Motor_Step > 1) {
@@ -83,13 +83,13 @@ void Motor_Action_Go_Full_Speed()     {
 #endif
 
       delay(60);
-      //Serial.print(F("Step: "));
-      //Serial.println(Motor_Step);
+      //message_out.print(F("Step: "));
+      //message_out.println(Motor_Step);
       Motor_Step = Motor_Step - 10;
     }
 
     Wheel_Status_Value = 3;
-    Serial.print(F("Wheel:S-FULL|"));
+    message_out.print(F("Wheel:S-FULL|"));
     Full_Speed_Achieved = 1;
   }
 
@@ -113,7 +113,7 @@ void Motor_Action_Go_Slow_Speed()     {
 #endif
 
   Wheel_Status_Value = 4;
-  Serial.print(F("Wheel:SLOW|"));
+  message_out.print(F("Wheel:SLOW|"));
 }
 
 void Motor_Action_GoFullSpeed_Out_Garage()     {
@@ -138,7 +138,7 @@ void Motor_Action_GoFullSpeed_Out_Garage()     {
 #endif
 
   Wheel_Status_Value = 1;
-  Serial.print(F("Wheel:FULL|"));
+  message_out.print(F("Wheel:FULL|"));
 }
 
 
@@ -166,7 +166,7 @@ void SetPins_ToGoForwards()     {                                 // Motor Bridg
 #endif
 
   Wheel_Status_Value = 5;
-  Serial.print(F("|Wheel:For|"));
+  message_out.print(F("|Wheel:For|"));
 }
 
 
@@ -193,7 +193,7 @@ void SetPins_ToGoBackwards()      {                               // Motor Bridg
 #endif
 
   Wheel_Status_Value = 6;
-  Serial.print(F("|Wheel:Rev|"));
+  message_out.print(F("|Wheel:Rev|"));
 #if not defined(NODELAY_BACKWARD)
   delay(20);
 #endif
@@ -226,7 +226,7 @@ void Motor_Action_Stop_Motors()  {                                     // Motor 
 #endif
 
   Wheel_Status_Value = 7;
-  Serial.print(F("Wheel:0FF|"));
+  message_out.print(F("Wheel:0FF|"));
 
   Full_Speed_Achieved = 0;
 }
@@ -255,7 +255,7 @@ void SetPins_ToTurnLeft()       {                              // Pins are set s
 #endif
 
   Wheel_Status_Value = 8;
-  Serial.print(F("Wheel:TL_|"));
+  message_out.print(F("Wheel:TL_|"));
 }
 
 
@@ -282,7 +282,7 @@ void SetPins_ToTurnRight() {                                    // Pins are set 
 #endif
 
   Wheel_Status_Value = 9;
-  Serial.print(F("Wheel:TR_|"));
+  message_out.print(F("Wheel:TR_|"));
 }
 
 
@@ -322,7 +322,7 @@ void Motor_Action_Spin_Blades()  {
       digitalWrite(R_EN, HIGH);
       digitalWrite(L_EN, HIGH);
       analogWrite(RPWM, PWM_Blade_Speed);
-      Serial.print(F("Blades:ON_|"));
+      message_out.print(F("Blades:ON_|"));
     }
 
     if (Cutting_Blades_Activate == 0) {                                     // Blades are turn off in settings and will not spin!
@@ -342,7 +342,7 @@ void Motor_Action_Stop_Spin_Blades()  {
     digitalWrite(Relay_Blades_Brake_Resistor, HIGH);
     Blade_flagRun = false;
   #endif // -(ROBOT_MOWER)-
-    Serial.print(F("Blades:0FF|"));
+    message_out.print(F("Blades:0FF|"));
   }
 }
 
@@ -363,12 +363,12 @@ void Motor_Action_Dynamic_PWM_Steering() {
   analogWrite(ENDPin, PWM_Left);
 #endif
 
-  Serial.print(F("PWM_L:"));
-  Serial.print(PWM_Left);
-  Serial.print(F("|"));
-  Serial.print(F("PWM_R:"));
-  Serial.print(PWM_Right);
-  Serial.print(F("|"));
+  message_out.print(F("PWM_L:"));
+  message_out.print(PWM_Left);
+  message_out.print(F("|"));
+  message_out.print(F("PWM_R:"));
+  message_out.print(PWM_Right);
+  message_out.print(F("|"));
 
 }
 
@@ -390,8 +390,8 @@ void Stop_Button_Action() {
 	if (Stop_Button_Activated) {
 		Manouver_Park_The_Mower();
 		Print_LCD_Stop_Btn();
-		Serial.println(F(""));
-		Serial.println(F("!!! STOP button pressed !!!"));
+		message_out.println(F(""));
+		message_out.println(F("!!! STOP button pressed !!!"));
 		Stop_Button_Activated = false;
 	}
   #endif // -(STOP_BTN)-

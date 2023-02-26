@@ -77,19 +77,19 @@ void Check_Wire_In_Out() {
       Wire_Refind_Tries = Wire_Refind_Tries + 1;
       Loop_Cycle_Mowing = 0;
       if (Manuel_Mode == 0) Get_WIFI_Commands();                                   // TX and RX data from NodeMCU
-      Serial.println(F(""));
-      Serial.print(F("|Wire Refind Atempts:"));
-      Serial.print(Wire_Refind_Tries);
-      Serial.print("|");
-      Serial.println(F(""));
+      message_out.println(F(""));
+      message_out.print(F("|Wire Refind Atempts:"));
+      message_out.print(Wire_Refind_Tries);
+      message_out.print("|");
+      message_out.println(F(""));
       if (Wire_Refind_Tries > 4) {
         Motor_Action_Stop_Motors(); 
         #if defined(LCD_KEYPAD) 
         lcd.clear(); 
         #endif
         Mower_Error = 1;
-        Serial.println(F(""));
-        Serial.println("Max refind tries exceeded - Parking the Mower");
+        message_out.println(F(""));
+        message_out.println("Max refind tries exceeded - Parking the Mower");
         delay(2000);
       
       }
@@ -115,15 +115,15 @@ void Running_Test_for_Boundary_Wire()  {
     // Only used for testing purposes
     if (Fake_All_Settings == 1) Execute_Fake_It();
     if (Fake_Wire == 1) MAG_Now = -500;
-    Serial.print(F("|MAG:"));
-    Serial.print(MAG_Now);
+    message_out.print(F("|MAG:"));
+    message_out.print(MAG_Now);
 
 
 
    
     // If the MAG field is very low between these values we can assume the wire is off
     if ( (MAG_Now > -20 ) && (MAG_Now < 20 )  ) {
-      //Serial.print("WIRE Not Detected");
+      //message_out.print("WIRE Not Detected");
       Wire_Detected = 0;
       Print_LCD_NO_Wire();
       Wire_Off = Wire_Off + 1;
@@ -133,30 +133,30 @@ void Running_Test_for_Boundary_Wire()  {
     // if the MAG field is strong then the wire is on.
     if (   (MAG_Now <= -21) || (MAG_Now >= 20)  ) {
       Print_LCD_Wire_ON();  
-      //Serial.print("WIRE Detected");
+      //message_out.print("WIRE Detected");
       Wire_Detected = 1;                                            // Wire is detected  
       Wire_Off = 0;                                                 // Resets the counter
       }
       
       // If the mower is docked or Parked then the TFT screen just shows a wire off warning
       if ( (Wire_Off > 5) && (Mower_Docked == 0) && (Mower_Parked == 0) ) {
-        Serial.println(F("Wire Test Failed - Hibernating Mower"));
+        message_out.println(F("Wire Test Failed - Hibernating Mower"));
         Manouver_Hibernate_Mower();      // Send the mower to sleep        
         }
        
 
-    Serial.print(F("|Wire"));
-    Serial.print(F(":"));
-    if (Wire_Detected == 0) Serial.print(F("OFF|"));
-    if (Wire_Detected == 1) Serial.print(F("ON|"));
+    message_out.print(F("|Wire"));
+    message_out.print(F(":"));
+    if (Wire_Detected == 0) message_out.print(F("OFF|"));
+    if (Wire_Detected == 1) message_out.print(F("ON|"));
     }
 
   
   // If the wire is not enabled
   if (Perimeter_Wire_Enabled == 0) {   
-    Serial.print(F("Wire"));
-    Serial.print(F(":"));                                            
-    Serial.print(F("DISABLED|"));
+    message_out.print(F("Wire"));
+    message_out.print(F(":"));                                            
+    message_out.print(F("DISABLED|"));
     Wire_Detected = 1;
     Wire_Off = 0;
 
@@ -181,15 +181,15 @@ void UpdateWireSensor()   {
 
 void PrintBoundaryWireStatus() {
 
-  Serial.print(F("|IN/OUT:"));
-  Serial.print((perimeter.isInside(0)));
-  Serial.print(F("|Mag:"));
-  Serial.print((int)perimeter.getMagnitude(0));
-  Serial.print(F("|Smag:"));
-  Serial.print((int)perimeter.getSmoothMagnitude(0));
-  Serial.print(F("|Q:"));
-  Serial.print((perimeter.getFilterQuality(0)));
-  Serial.print(F("|"));
+  message_out.print(F("|IN/OUT:"));
+  message_out.print((perimeter.isInside(0)));
+  message_out.print(F("|Mag:"));
+  message_out.print((int)perimeter.getMagnitude(0));
+  message_out.print(F("|Smag:"));
+  message_out.print((int)perimeter.getSmoothMagnitude(0));
+  message_out.print(F("|Q:"));
+  message_out.print((perimeter.getFilterQuality(0)));
+  message_out.print(F("|"));
     
   }
 
@@ -202,44 +202,44 @@ void Run_Initial_Boundary_Wire_Test() {
     
     if (Perimeter_Wire_Enabled == 1) {
         Mower_Track_To_Exit = 1;
-        Serial.println(F("Testing Boundary Wire #1"));
+        message_out.println(F("Testing Boundary Wire #1"));
         Running_Test_for_Boundary_Wire();
         delay(50);    
-        Serial.print(F("MAG Detected = "));
-        Serial.print(MAG_Now);   
-        Serial.print(F(" | Wire Detected = "));
-        Serial.print(Wire_Detected);           
-        Serial.println(F(""));
+        message_out.print(F("MAG Detected = "));
+        message_out.print(MAG_Now);   
+        message_out.print(F(" | Wire Detected = "));
+        message_out.print(Wire_Detected);           
+        message_out.println(F(""));
         
         // If the boundary wire is turned off / not detected
         // Then the test boundary wire function will already put the mower into hibernate mode.
         
         if (Wire_Detected == 0) {
-            Serial.println("Perimeter Wire not detected - Testing Again");
-            Serial.println(F("Testing Boundary Wire #2"));
+            message_out.println("Perimeter Wire not detected - Testing Again");
+            message_out.println(F("Testing Boundary Wire #2"));
             delay(2000);
             Wire_Detected = 1;
             Running_Test_for_Boundary_Wire();                                     // Test again for the boundary wire
-            Serial.print(F("MAG Detected = "));
-            Serial.println(MAG_Now);                
+            message_out.print(F("MAG Detected = "));
+            message_out.println(MAG_Now);                
                             
             if (Wire_Detected == 0) {                                 // if its still saying the wire is off then park the mower.
-              Serial.println("Testing Boundary Wire #3");
-              Serial.print(F("Wait .... 2secs"));
+              message_out.println("Testing Boundary Wire #3");
+              message_out.print(F("Wait .... 2secs"));
               delay(2000);      
               Wire_Detected = 1;
               Running_Test_for_Boundary_Wire();
-              Serial.print(F("MAG Detected = "));
-              Serial.println(MAG_Now);
+              message_out.print(F("MAG Detected = "));
+              message_out.println(MAG_Now);
               } 
               if (Wire_Detected == 0) {                                 // if its still saying the wire is off then park the mower.
-                Serial.println("Perimeter Wire not detected - Last Try.....");
-                Serial.print(F("Wait .... 2secs"));
+                message_out.println("Perimeter Wire not detected - Last Try.....");
+                message_out.print(F("Wait .... 2secs"));
                 delay(2000);      
                 Wire_Detected = 1;
                 Running_Test_for_Boundary_Wire();
-                Serial.print(F("MAG Detected = "));
-                Serial.println(MAG_Now);
+                message_out.print(F("MAG Detected = "));
+                message_out.println(MAG_Now);
                 } 
                 
             }
@@ -248,9 +248,9 @@ void Run_Initial_Boundary_Wire_Test() {
 
   if (Perimeter_Wire_Enabled == 0) {
      Wire_Detected = 1;
-     Serial.print(F("Wire"));
-     Serial.print(F(":"));                                            
-     Serial.print(F("DISABLED|"));
+     message_out.print(F("Wire"));
+     message_out.print(F(":"));                                            
+     message_out.print(F("DISABLED|"));
      Wire_Detected = 1;
      Wire_Off = 0;
   

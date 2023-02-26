@@ -47,11 +47,11 @@ int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int so
     distance is then set to 999cm so the missed ping is not seen as an object detected.*/
   if (distanceX == 0) {
     distanceX = 999;
-    Serial.print(F("|S"));
-    Serial.print(sonarX);
-    Serial.print(F(":"));
-    Serial.print(F("NP!"));
-    Serial.print(F("|"));
+    message_out.print(F("|S"));
+    message_out.print(sonarX);
+    message_out.print(F(":"));
+    message_out.print(F("NP!"));
+    message_out.print(F("|"));
 
     // Check why removed
     //if (sonarX == 1) Sonar_1_Error++;
@@ -60,32 +60,32 @@ int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int so
     
     if (Sonar_1_Error > Sonar_Max_Error_Shutdown) {
       Sonar_1_Activate = 0;
-      Serial.println(F(""));
-      Serial.println(F("Sonar 1 - Shutdown Error - Check Wiring"));
-      Serial.println(F(""));    
+      message_out.println(F(""));
+      message_out.println(F("Sonar 1 - Shutdown Error - Check Wiring"));
+      message_out.println(F(""));    
       
       }
     if (Sonar_2_Error > Sonar_Max_Error_Shutdown) {
       Sonar_2_Activate = 0;
-      Serial.println(F(""));
-      Serial.println(F("Sonar 2 - Shutdown Error - Check Wiring"));
-      Serial.println(F(""));    
+      message_out.println(F(""));
+      message_out.println(F("Sonar 2 - Shutdown Error - Check Wiring"));
+      message_out.println(F(""));    
       }
     if (Sonar_3_Error > Sonar_Max_Error_Shutdown) {
       Sonar_3_Activate = 0;
-      Serial.println(F(""));
-      Serial.println(F("Sonar 3 - Shutdown Error - Check Wiring"));
-      Serial.println(F(""));    
+      message_out.println(F(""));
+      message_out.println(F("Sonar 3 - Shutdown Error - Check Wiring"));
+      message_out.println(F(""));    
       }
   }
 
   /*Prints the Sonar letter and distance measured on the serial Monitor*/
-  Serial.print(F("|S"));
-  Serial.print(sonarX);
-  Serial.print(F(":"));
-  Serial.print(distanceX);
-  Serial.print(F("cm"));
-  Serial.print(F("/"));
+  message_out.print(F("|S"));
+  message_out.print(sonarX);
+  message_out.print(F(":"));
+  message_out.print(distanceX);
+  message_out.print(F("cm"));
+  message_out.print(F("/"));
 
   /*If sonar distance is less than maximum distance then an object is registered to avoid*/
   if (distanceX <= maxdistancesonar ) {
@@ -98,24 +98,24 @@ int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int so
     
     if (sonarX == 1) {
         Sonar_Hit_1_Total = (Sonar_Hit_1_Total + 1);
-        Serial.print(Sonar_Hit_1_Total);
+        message_out.print(Sonar_Hit_1_Total);
         Sonar_1_Error = 0;
         }
       if (sonarX == 2) {
         Sonar_Hit_2_Total = (Sonar_Hit_2_Total + 1);
-        Serial.print(Sonar_Hit_2_Total);
+        message_out.print(Sonar_Hit_2_Total);
         Sonar_2_Error = 0;
         }
       if (sonarX == 3) {
         Sonar_Hit_3_Total = (Sonar_Hit_3_Total + 1);
-        Serial.print(Sonar_Hit_3_Total);
+        message_out.print(Sonar_Hit_3_Total);
         Sonar_3_Error = 0;
         }      
     if ( (Sonar_Hit_1_Total == Max_Sonar_Hit) || (Sonar_Hit_2_Total == Max_Sonar_Hit) || (Sonar_Hit_3_Total == Max_Sonar_Hit) ) {
       Sonar_Hit = 1;  
       Print_Sonar_Hit();
-      Serial.println(F(""));
-      Serial.println("Sonar Hit Detected");
+      message_out.println(F(""));
+      message_out.println("Sonar Hit Detected");
       }
     
     }
@@ -131,15 +131,15 @@ int PingSonarX(int trigPinX, int echoPinX, int distanceX, long durationX, int so
     
       if (sonarX == 1) {
         Sonar_Hit_1_Total = 0;
-        Serial.print(Sonar_Hit_1_Total);
+        message_out.print(Sonar_Hit_1_Total);
         }
       if (sonarX == 2) {
         Sonar_Hit_2_Total = 0;
-        Serial.print(Sonar_Hit_2_Total);
+        message_out.print(Sonar_Hit_2_Total);
         }
       if (sonarX == 3) {
         Sonar_Hit_3_Total = 0;
-        Serial.print(Sonar_Hit_3_Total);
+        message_out.print(Sonar_Hit_3_Total);
         }   
     }
    

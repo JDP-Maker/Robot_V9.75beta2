@@ -12,7 +12,7 @@ signed long startCTime;   // variable where time of measuring start is stored
 // function for measuring of loop cycle time, for usage just call it
 void RuntimeMeasuring() {
 	resultCTime = (signed long)millis() - startCTime;
-	Serial.print(F("|CT:")); Serial.print(resultCTime); Serial.print(F("|"));
+	message_out.print(F("|CT:")); message_out.print(resultCTime); message_out.print(F("|"));
 	startCTime = (signed long)millis();
 }
 
@@ -80,7 +80,7 @@ void MEGA_WDT()
   }
   else if (Mower_Running == 0) {
 	  wdt_disable();
-	  if (wdt_enable_flagRun) Serial.println(F("\n !!! WDT disabled !!!"));
+	  if (wdt_enable_flagRun) message_out.println(F("\n !!! WDT disabled !!!"));
 	  wdt_enable_flagRun = false;
   }
   else {

@@ -11,7 +11,7 @@ void Read_Serial1_Nano() {
 	  memcpy (&recvBuff, SerialCom1.getData (), length);
 
 	  if (recvBuff[0] == 10) {
-		  //Serial.print(F("|NANOserIn:OK|"));
+		  //message_out.print(F("|NANOserIn:OK|"));
 		  RawValueAmp =   recvBuff[1] | recvBuff[2] << 8;
 		  RawValueVolt =  recvBuff[3] | recvBuff[4] << 8;
 		  Rain_Detected = recvBuff[5] | recvBuff[6] << 8;
@@ -20,13 +20,13 @@ void Read_Serial1_Nano() {
 	  }
 	}  // end if something received
 
-  //Serial.print("WAmpRaw: ");
-  //Serial.print(RawWheelAmp);
-  //Serial.print(" |");
+  //message_out.print("WAmpRaw: ");
+  //message_out.print(RawWheelAmp);
+  //message_out.print(" |");
 
-  //Serial.print("DAMpRaw: ");
-  //Serial.print(RawDrillAmp);
-  //Serial.print(" |");
+  //message_out.print("DAMpRaw: ");
+  //message_out.print(RawDrillAmp);
+  //message_out.print(" |");
 
   Calculate_Volt_Amp_Charge();
 
