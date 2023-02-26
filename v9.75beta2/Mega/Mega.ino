@@ -28,7 +28,7 @@
 //#define WEBSERVER					    // Uncomment if using WebServer - show mower data on web page
 //#define WDT							      // Uncomment if using hardware watchdog timer - if MEGA freeze then restart itself to avoid still running
 
-//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+//*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 
 //Libraries for Perimeter Wire Receiver
 #include <Arduino.h>
